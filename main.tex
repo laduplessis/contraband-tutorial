@@ -38,11 +38,9 @@
 	{\Large {\em Rong Zhang and F\'{a}bio K. Mendes}}
 \end{center}
 
-<<<<<<< HEAD
+
 Phylogenetic inference using continuous traits based on Brownian motion models
-=======
-Modelling continuous trait evolution in BEAST2
->>>>>>> a4f1fa58437a7ced4dcfe40463f5c5e8ac8ee73b
+
 
 %%%%%%%%%%%%%%%%%
 % Tutorial body %
@@ -68,14 +66,11 @@ In this tutorial, we introduce the \textbf{contraband} (\textbf{con}tinuous \tex
 %
 \subsubsection{BEAST2 - Bayesian Evolutionary Analysis Sampling Trees2}
 %
-<<<<<<< HEAD
 BEAST2 (\url{http://www.beast2.org}) is a free software package for
 Bayesian evolutionary analysis of molecular sequences using MCMC and
 strictly oriented toward inference using rooted, time-measured
 phylogenetic trees. This tutorial is written for BEAST v2.7.7 \citep{bouckaert2019beast}.
-=======
-BEAST2 (\url{http://www.beast2.org}) is a free software package for Bayesian evolutionary analysis of molecular sequences using MCMC and strictly oriented toward inference using rooted, time-measured phylogenetic trees. This tutorial is written for BEAST v2.7.x.
->>>>>>> a4f1fa58437a7ced4dcfe40463f5c5e8ac8ee73b
+
 
 \subsubsection{BEAUti2 - Bayesian Evolutionary Analysis Utility}
 
@@ -97,16 +92,11 @@ Tracer (\url{http://tree.bio.ed.ac.uk/software/tracer}) is used to summarise the
 
 FigTree (\url{http://tree.bio.ed.ac.uk/software/figtree}) is a program for viewing trees and producing publication-quality figures. It can interpret the node-annotations created on the summary trees by TreeAnnotator, allowing the user to display node-based statistics (e.g.~posterior probabilities). We will be using FigTree v1.4.4.
 
-<<<<<<< HEAD
-
 \section{Practical Part  \uppercase\expandafter{\romannumeral 1}: Data preparation}
 
 
 
 \section{Practical  Part \uppercase\expandafter{\romannumeral 2}: Parameter and State inference using contraband}
-=======
-\section{Practical: Parameter and State inference using the phylogenetic continuous model}
->>>>>>> a4f1fa58437a7ced4dcfe40463f5c5e8ac8ee73b
 
 In this tutorial we will estimate evolutionary rates,  trait correlations, ancestral states and phylogenetic trees using the Brownian motion implemented in BEAST2, contraband.
 
@@ -124,7 +114,7 @@ The aim is to:
 
 \subsection{Setting up an analysis in BEAUti}
 
-<<<<<<< HEAD
+
 \subsubsection{Download contraband}\label{download-contraband}
 
 First, we have to download the package contraband using the BEAUTi package
@@ -142,23 +132,9 @@ contraband will only be available in BEAUti once you close and restart the
 program.
 
 \subsubsection{Loading the Carnivoran Molecular Sequences}\label{loading-the-molecular-sequences}
-=======
-\subsubsection{Download contraband}
 
-First, we have to download the package contraband using the BEAUTi package manager. Go to \emph{File \textgreater{}\textgreater{} Manage Packages}
-and download the package contraband.
-%
-%\begin{figure}
-%    \centering
-%    \includegraphics[width=0.500000\textwidth]{figures/MascotDownload.png}
-%    \caption{Download the MASCOT package.}
-%    \label{fig:example1}
-%\end{figure}
-%
-contraband will only be available in BEAUti once you close and restart the program.
-%
+
 \subsubsection{Loading \textbf{DATA} the (Partitions)}
->>>>>>> a4f1fa58437a7ced4dcfe40463f5c5e8ac8ee73b
 
 The sequences from the \emph{data} folder name \emph{XXX.nexus} can be either drag and dropped into BEAUti or added using BEAUti’s menu system via \emph{File \textgreater{}\textgreater{} Import Alignment}. Once the sequences are added, we need to specify the sampling dates.
 %
