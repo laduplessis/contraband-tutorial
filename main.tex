@@ -38,7 +38,11 @@
 	{\Large {\em Rong Zhang and F\'{a}bio K. Mendes}}
 \end{center}
 
+<<<<<<< HEAD
 Phylogenetic inference using continuous traits based on Brownian motion models
+=======
+Modelling continuous trait evolution in BEAST2
+>>>>>>> a4f1fa58437a7ced4dcfe40463f5c5e8ac8ee73b
 
 %%%%%%%%%%%%%%%%%
 % Tutorial body %
@@ -62,14 +66,18 @@ In this tutorial, we introduce the \textbf{contraband} (\textbf{con}tinuous \tex
 
 \section{Programs used in this Exercise}\label{programs-used-in-this-exercise}
 %
-\subsubsection{BEAST2 - Bayesian Evolutionary Analysis Sampling Trees2}\label{beast2---bayesian-evolutionary-analysis-sampling-trees-2}
+\subsubsection{BEAST2 - Bayesian Evolutionary Analysis Sampling Trees2}
 %
+<<<<<<< HEAD
 BEAST2 (\url{http://www.beast2.org}) is a free software package for
 Bayesian evolutionary analysis of molecular sequences using MCMC and
 strictly oriented toward inference using rooted, time-measured
 phylogenetic trees. This tutorial is written for BEAST v2.7.7 \citep{bouckaert2019beast}.
+=======
+BEAST2 (\url{http://www.beast2.org}) is a free software package for Bayesian evolutionary analysis of molecular sequences using MCMC and strictly oriented toward inference using rooted, time-measured phylogenetic trees. This tutorial is written for BEAST v2.7.x.
+>>>>>>> a4f1fa58437a7ced4dcfe40463f5c5e8ac8ee73b
 
-\subsubsection{BEAUti2 - Bayesian Evolutionary Analysis Utility}\label{beauti2---bayesian-evolutionary-analysis-utility}
+\subsubsection{BEAUti2 - Bayesian Evolutionary Analysis Utility}
 
 BEAUti2 is a graphical user interface tool for generating BEAST2 XML configuration files.
 
@@ -83,49 +91,40 @@ TreeAnnotator is provided as a part of the BEAST2 package so you do not need to 
 
 \subsubsection{Tracer}\label{tracer}
 
-Tracer (\url{http://tree.bio.ed.ac.uk/software/tracer}) is used to
-summarise the posterior estimates of the various parameters sampled by
-the Markov Chain. This program can be used for visual inspection and to
-assess convergence. It helps to quickly view median estimates and 95\%
-highest posterior density intervals of the parameters, and calculates
-the effective sample sizes (ESS) of parameters. It can also be used to
-investigate potential parameter correlations. We will be using Tracer
-v1.7.2.
+Tracer (\url{http://tree.bio.ed.ac.uk/software/tracer}) is used to summarise the posterior estimates of the various parameters sampled by the Markov Chain. This program can be used for visual inspection and to assess convergence. It helps to quickly view median estimates and 95\% highest posterior density intervals of the parameters, and calculates the effective sample sizes (ESS) of parameters. It can also be used to investigate potential parameter correlations. We will be using Tracer v1.7.2.
 
 \subsubsection{FigTree}\label{figtree}
 
-FigTree (\url{http://tree.bio.ed.ac.uk/software/figtree}) is a program
-for viewing trees and producing publication-quality figures. It can
-interpret the node-annotations created on the summary trees by
-TreeAnnotator, allowing the user to display node-based statistics
-(e.g.~posterior probabilities). We will be using FigTree v1.4.4.
+FigTree (\url{http://tree.bio.ed.ac.uk/software/figtree}) is a program for viewing trees and producing publication-quality figures. It can interpret the node-annotations created on the summary trees by TreeAnnotator, allowing the user to display node-based statistics (e.g.~posterior probabilities). We will be using FigTree v1.4.4.
 
+<<<<<<< HEAD
 
 \section{Practical Part  \uppercase\expandafter{\romannumeral 1}: Data preparation}
 
 
 
 \section{Practical  Part \uppercase\expandafter{\romannumeral 2}: Parameter and State inference using contraband}
+=======
+\section{Practical: Parameter and State inference using the phylogenetic continuous model}
+>>>>>>> a4f1fa58437a7ced4dcfe40463f5c5e8ac8ee73b
 
-In this tutorial we will estimate migration rates, effective population
-sizes and locations of internal nodes using the marginal approximation
-of the structured coalescent implemented in BEAST2, MASCOT \citep{mueller2017mascot}.
+In this tutorial we will estimate evolutionary rates,  trait correlations, ancestral states and phylogenetic trees using the Brownian motion implemented in BEAST2, contraband.
 
 The aim is to:
 
 \begin{itemize}
 
 \item
-  Learn how to infer structure from trees with sampling location
+  Learn how to infer phylogenetic trees with continuous traits/characters
 \item
   Get to know how to choose the set-up of such an analysis
 \item
-  Learn how to read the output of a MASCOT analysis
+  Learn how to read the output of a ``contraband" analysis
 \end{itemize}
 
-\subsection{Setting up an analysis in
-BEAUti}\label{setting-up-an-analysis-in-beauti}
+\subsection{Setting up an analysis in BEAUti}
 
+<<<<<<< HEAD
 \subsubsection{Download contraband}\label{download-contraband}
 
 First, we have to download the package contraband using the BEAUTi package
@@ -143,20 +142,33 @@ contraband will only be available in BEAUti once you close and restart the
 program.
 
 \subsubsection{Loading the Carnivoran Molecular Sequences}\label{loading-the-molecular-sequences}
+=======
+\subsubsection{Download contraband}
 
-The sequences from the \emph{data} folder name \emph{H3N2.nexus} can be
-either drag and dropped into BEAUti or added using BEAUti’s menu system via \emph{File
-\textgreater{}\textgreater{} Import Alignment}. Once the sequences are
-added, we need to specify the sampling dates.
+First, we have to download the package contraband using the BEAUTi package manager. Go to \emph{File \textgreater{}\textgreater{} Manage Packages}
+and download the package contraband.
 %
-\subsubsection{Get the sampling times (Tip
-Dates)}\label{get-the-sampling-times-tip-dates}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=0.500000\textwidth]{figures/MascotDownload.png}
+%    \caption{Download the MASCOT package.}
+%    \label{fig:example1}
+%\end{figure}
 %
-%Open the "Tip Dates" panel and then select the "Use tip dates" checkbox.
+contraband will only be available in BEAUti once you close and restart the program.
 %
-%The sampling times are encoded in the sequence names.  We can tell BEAUti 
-%to use these by clicking the \emph{Auto-configure} button. The sampling times 
-%appear following the third vertical bar "|" in the sequence name. To extract these times, select "split on character", enter "|" (without the quotes) in the text box immediately to the right, and then select "3" from the drop-down box to the right, as shown in the figure below.
+\subsubsection{Loading \textbf{DATA} the (Partitions)}
+>>>>>>> a4f1fa58437a7ced4dcfe40463f5c5e8ac8ee73b
+
+The sequences from the \emph{data} folder name \emph{XXX.nexus} can be either drag and dropped into BEAUti or added using BEAUti’s menu system via \emph{File \textgreater{}\textgreater{} Import Alignment}. Once the sequences are added, we need to specify the sampling dates.
+%
+\subsubsection{Get the sampling times (Tip Dates)}
+
+Open the "Tip Dates" panel and then select the "Use tip dates" checkbox.
+
+The sampling times are encoded in the sequence names.  We can tell BEAUti 
+to use these by clicking the \emph{Auto-configure} button. The sampling times 
+appear following the third vertical bar "|" in the sequence name. To extract these times, select "split on character", enter "|" (without the quotes) in the text box immediately to the right, and then select "3" from the drop-down box to the right, as shown in the figure below.
 %
 %\begin{figure}
 %    \centering
@@ -165,10 +177,10 @@ Dates)}\label{get-the-sampling-times-tip-dates}
 %    \label{fig:example1}
 %\end{figure}
 %
-%Clicking "Ok" should now populate the table with the sample times extracted from the sequence names: the column \textbf{Date} should now have values between 2000 and 2002 and the column \textbf{Height} should have values from 0 to 2. The heights denote the time difference from a sequence to the most recently sampled sequence. If everything is 
-%specified correctly, the sequence with Height 0.0 should have Date 2001.9. 
+Clicking "Ok" should now populate the table with the sample times extracted from the sequence names: the column \textbf{Date} should now have values between 2000 and 2002 and the column \textbf{Height} should have values from 0 to 2. The heights denote the time difference from a sequence to the most recently sampled sequence. If everything is 
+specified correctly, the sequence with Height 0.0 should have Date 2001.9. 
 %
-\subsubsection{Specify the Site Model (Site Model)}
+\subsubsection{Specify the Brownian motion Model}
 %
 %Next, we have to specify the site model. For Influenza Hemagluttanin
 %sequences as we have here, HKY is the most commonly used model of
@@ -204,37 +216,10 @@ Dates)}\label{get-the-sampling-times-tip-dates}
 %    \label{fig:example1}
 %\end{figure}
 %
-\subsubsection{Get the sampling locations (TipLocations)}
-%
-%We first have to choose the tree prior, which in this case is MASCOT. 
-%We do this by switching to the "Priors" tab. Search the drop down menu 
-%next to \emph{Tree.t:H3N2} and choose MASCOT.
-%
-%By default, the rate dynamics for this setting is \emph{Constant}, 
-%which means that effective population sizes and migration rates are assumed 
-%to be constant through time.
-%We next have to define the sampling location of the individual tips.
-%
-%Initially the column \textbf{Location} should be NOT\_SET for every sequence.  
-%After clicking the \emph{Guess}button, you can split the sequence on the 
-%vertical bar "|" again by selecting "split on character" and entering "|" 
-%in the box. However, the locations are in the fourth group, so this time 
-%choose "4" from the drop-down menu.
-%After clicking the \emph{OK} button, the window should look like the 
-%one shown in the figure below:
-%
-%\begin{figure}
-%    \centering
-%    \includegraphics[width=0.700000\textwidth]{figures/TipLocations.png}
-%    \caption{Configuring sample locations.}
-%    \label{fig:example1}
-%\end{figure}
-%
-%
 \subsubsection{Specify the priors (Priors)}
 %
-%Now, we need to set the priors for the various parameters of the model. 
-%You can find the parameter priors below the tree prior.
+Now, we need to set the priors for the various parameters of the model. 
+You can find the parameter priors below the tree prior.
 %
 %First, consider the effective population size parameter \emph{Ne}. Since we
 %have only a few samples per location, meaning little information about the
@@ -268,12 +253,12 @@ Dates)}\label{get-the-sampling-times-tip-dates}
 
 \subsubsection{Specify the MCMC chain length (MCMC)}\label{specify-the-mcmc-chain-length-mcmc}
 %
-%Here we can set the length of the MCMC chain and after how many
-%iterations the parameter and trees a logged. For this dataset, 2 million
-%iterations should be sufficient. In order to have enough samples but not
-%create too large files, we can set the logEvery to 2000, so we have 1001
-%samples overall. Next, we have to save the \lstinline!*.xml! file under
-%\emph{File \textgreater{}\textgreater{} Save as}.
+Here we can set the length of the MCMC chain and after how many
+iterations the parameter and trees a logged. For this dataset, 2 million
+iterations should be sufficient. In order to have enough samples but not
+create too large files, we can set the logEvery to 2000, so we have 1001
+samples overall. Next, we have to save the \lstinline!*.xml! file under
+\emph{File \textgreater{}\textgreater{} Save as}.
 %
 %\begin{figure}
 %    \centering
@@ -284,18 +269,18 @@ Dates)}\label{get-the-sampling-times-tip-dates}
 %
 \subsubsection{Run the Analysis using BEAST2}\label{run-the-analysis-using-beast2}
 %
-%Run the \lstinline!*.xml! using BEAST2 or use finished runs from the
-%\emph{precooked-runs} folder. The analysis should take about 6 to 7
-%minutes.
+Run the \lstinline!*.xml! using BEAST2 or use finished runs from the
+\emph{precooked-runs} folder. The analysis should take about 6 to 7
+minutes.
 %
 
 \section{Practical  Part \uppercase\expandafter{\romannumeral 3}:  Post analysis}
 
 \subsubsection{Analyse the log file using Tracer}\label{analyse-the-log-file-using-tracer}
 %
-%First, we can open the \lstinline!*.log! file in tracer to check if the
-%MCMC has converged. The ESS value should be above 200 for almost all
-%values and especially for the posterior estimates. 
+First, we can open the \lstinline!*.log! file in tracer to check if the
+MCMC has converged. The ESS value should be above 200 for almost all
+values and especially for the posterior estimates. 
 %
 %\begin{figure}
 %    \centering
@@ -351,13 +336,13 @@ Dates)}\label{get-the-sampling-times-tip-dates}
 %Next, we want to summarize the trees. This we can do using TreeAnnotator. Until recently the \textit{maximum clade credibility} tree (MCC) has been the default summary method in TreeAnotator. To produce MCC trees TreeAnotator takes the set of trees and find the best supported tree by maximising the product of the posterior clade probabilities. It will then annotate this representative summary tree with the mean ages of all the nodes and the corresponding 95\% HPD ranges as well as the posterior clade probability for each node. A new point estimate, called a \textit{conditional clade distribution} tree (CCD) has been proposed  \citep{berling2025}. It has been shown to outperform MCC in terms of accuracy (based on Robinson-Foulds distance to the true tree) and precision (how different are the point estimates calculated for replicate MCMC chains). CCD methods may produce a tree that would be well supported but has not been sampled during MCMC. This is beneficial for large trees and complex parameter regimes. Since both methods are still widely used, we show how to use them to summarise the posterior tree distribution. \textbf{To save time, you may run just one method and compare it to the other using the example below.}
 %
 %
-%\textbf{Producing MCC tree}
+\textbf{Producing MCC tree}
 %
-%\begin{framed}
-%Open \textbf{TreeAnnotator} and then set the options as in the Figure \ref{fig:example1} below. You have to specify the \textbf{Burnin percentage}, \textbf{Target tree type},  \textbf{Node heights}, \textbf{Input Tree File} and the \textbf{Output File}.
-%Use the typed trees in the file  \lstinline!H3N2.H3N2.trees! as \textbf{Input Tree File}. Name output file \lstinline!H3N2.mcc.tree!.
-%After clicking \textbf{Run} the program should summarize the trees.
-%\end{framed}
+\begin{framed}
+Open \textbf{TreeAnnotator} and then set the options as in the Figure \ref{fig:example1} below. You have to specify the \textbf{Burnin percentage}, \textbf{Target tree type},  \textbf{Node heights}, \textbf{Input Tree File} and the \textbf{Output File}.
+Use the typed trees in the file  \lstinline!H3N2.H3N2.trees! as \textbf{Input Tree File}. Name output file \lstinline!H3N2.mcc.tree!.
+After clicking \textbf{Run} the program should summarize the trees.
+\end{framed}
 %
 %\begin{figure}
 %    \centering
@@ -400,48 +385,8 @@ Dates)}\label{get-the-sampling-times-tip-dates}
 %	\label{fig:ccd0}
 %\end{figure}
 %
-\subsubsection{Analyse and compare the MCC and CCD0 summary trees}
-%
-%In each logging step of the tree during the MCMC, MASCOT logs several different things. It logs the inferred probability of each node being in any possible location. In this example, these would be the inferred probabilities of being in Hong Kong, New York and New Zealand. Additionally, it logs the most likely location of each node.
-%
-%\begin{framed}
-%	Open \textbf{FigTree} and load your chosen summary tree (\lstinline!H3N2.mcc.tree or H3N2.ccd0.tree!).
-%	On the left hand menu, select \textbf{Appearance} >> \textbf{Colour by} and select \textbf{max}. This is the location that was inferred to be most often the most likely location of the node.
-%	Select \textbf{Trees} >> \textbf{Order nodes} >> \textbf{increasing}. The sorting step is only needed so we can compare trees better.
-%
-%	You may optionally increase line weight (\textbf{Appearance} >> \textbf{Line weight}) and tip label font (\textbf{Tip Labels} >> \textbf{Font size}).
-%\end{framed}
-%
-%Figures \ref{fig:mcc_tree} and \ref{fig:ccd0_tree} show the MCC and CCD0 trees respectively. First analyse tree for the method you followed.
-%
-%\begin{figure}
-%    \centering
-%    \includegraphics[width=1.000000\textwidth]{figures/figtree.mcc.png}
-%    \caption{MCC tree, inferred node locations.}
-%    \label{fig:mcc_tree}
-%\end{figure}
-%
-%\begin{figure}
-%	\centering
-%	\includegraphics[width=1.000000\textwidth]{figures/figtree.ccd0.png}
-%	\caption{CCD0 tree, inferred node locations.}
-%	\label{fig:ccd0_tree}
-%\end{figure}
-%
-%We can now determine if lineages ancestral to samples from New York are actually inferred to be from Hong Kong, or the probability of the root being in any of the locations.
-%
-%To get the actual inferred probabilities of each node being in any of the 3 locations, you can go to \emph{Node Labels} \textgreater{}\textgreater{}  \emph{Display} an then choose Hong\_Kong, New\_York or New\_Zealand. These are the actual inferred probabilities of the nodes being in any location.
-%
-%It should however be mentioned that the inference of nodes being in a particular location makes some simplifying assumptions, such as that there are no other locations (i.e. apart from the sampled locations) where lineages could have been.
-%
-%Another important thing to know is that currently, we assume rates to be constant. This means that we assume that the population size of the different locations does not change over time. We also make the same assumption about the migration rates through time.
-%
-%
-%Now, compare the figures for MCC and CCD0 summary trees. 
-%\begin{framed}
-%	One of the CCD0 summary method advantages is that it can evaluate tree topologies that were not sampled during the MCMC. This is why it usually performs better on high-entropy (uncertain, spread out) tree posterior. Knowing this, what observations can you make about our sample? Can you see some differences?
-%\end{framed}
-%
+\subsubsection{Analyse and compare the MCC trees}
+
 \subsubsection{Errors that can occur (Work in progress)}
 %
 %One of the errors message that can occur regularly is the following:
