@@ -30,7 +30,7 @@
 	\textbf{\LARGE Tutorial using BEAST v2.7.7}\\\vspace{2mm}
 
 	% Enter a short description of your tutorial here
-	\textbf{\textcolor{mycol}{\Large contraband Tutorial}}\\
+	\textbf{\textcolor{mycol}{\Large \texttt{contraband} tutorial}}\\
 
 	\vspace{4mm}
 
@@ -39,7 +39,7 @@
 \end{center}
 
 
-Phylogenetic inference using continuous traits based on Brownian motion models
+Total-evidence dating and trait-evolution evolutionary inference using phylogenetic multivariate Brownian motion models
 
 
 %%%%%%%%%%%%%%%%%
@@ -48,21 +48,80 @@ Phylogenetic inference using continuous traits based on Brownian motion models
 
 \section{Background}\label{background}
 
-Time-scaled phylogenetic trees are an ultimate goal of evolutionary biology and a necessary ingredient in comparative studies. 
-The accumulation of genomic data has resolved the tree of life to a great extent, yet timing evolutionary events remains challenging if not impossible without external information such as fossil ages and morphological characters. 
+% \begin{quote}
+\noindent \textbf{Bird's-eye view}. This tutorial shows how to use the \texttt{contraband} package in \texttt{BEAST 2} to model continuous trait evolution along a phylogeny with Brownian motion.
+Unlike methods that assume a ``known'', fixed tree, \texttt{contraband} lets you estimate the tempo and mode of trait evolution simultaneously with both species relationships and divergence times.
+% \end{quote}
 
-Methods for incorporating morphology in tree estimation have lagged behind their molecular counterparts, especially in the case of continuous characters that are scored at a resolution and  variable within and across species. 
-Popular continuous character phylogenetic models are based on Brownian motion (BM) and can incorporate correlated evolution among traits, which are assumed to evolve as a random walk whose diffusion rate is the evolutionary rate. 
-Using continuous characters in total-evidence tip dating thus not only has the potential to improve phylogenetic inference by enhancing morphological data sets but also provides natural workarounds for the issues observed under discrete-character models.
+\subsection{What is \texttt{contraband} for}
 
-While many computational methods exist for the study of morphological character evolution, tools capable of jointly modeling molecular and morphological characters are still lacking, particularly those that simultaneously account for
-uncertainty in species tree topology and branch lengths. 
-One way forward should be easily visible in the joint evolutionary modeling of all available data, whereby different sources of data inform on each other's model parameters and on the phylogeny itself.
+In this tutorial, we will walk you through running a simple analysis with the \texttt{contraband} (\textbf{con}tinuous \textbf{tra}its \textbf{b}rowni\textbf{an} mo\textbf{d}els) \texttt{BEAST 2} package.
+As the name suggests, \texttt{contraband} implements Brownian motion (BM) models for the evolution of continuous traits on a phylogeny.
 
-In this tutorial, we introduce the \textbf{contraband} (\textbf{con}tinuous \textbf{tra}its \textbf{b}rowni\textbf{an} mo\textbf{d}els) BEAST 2 package that provides a suite of models for the study of continuous trait evolution in a Bayesian framework. By compiling a data set comprised of contemporaneous and ancient molecular sequences, and discrete and continuous characters from living and extinct Carnivora taxa,  we show how to leverage continuous morphology in Phylogenetic inference.
+To understand how these models can be useful to evolutionary biologists, let's put our X-ray goggles on and look at the core of the \texttt{contraband} package: the probability density function (pdf) of the multivariate Brownian motion model -- the same pdf used for a multivariate normal distribution:
 
+\textcolor{red}{[include Eq. 1 of paper]}
 
-\section{Programs used in this Exercise}\label{programs-used-in-this-exercise}
+This equation simply gives us the probability of observing our data -- that is, one or more continuous traits -- given two key parameters:  
+(i) the expected value vector (or mean vector), $\boldsymbol{y_0}$, and  
+(ii) the variance-covariance matrix, $\boldsymbol{V}$.
+If you have tried a few of the other Taming the BEAST tutorials, these two parameters are the quantities whose posterior probability distributions we want to approximate via Markov Chain Monte Carlo (MCMC).
+
+In phylogenetics, $\boldsymbol{V}$ is typically decomposed as $\boldsymbol{V} = \mathbf{\Sigma} \otimes \boldsymbol{T}$, where $\mathbf{\Sigma}$ describes the variance and covariance structure of the traits, and $\boldsymbol{T}$ represents phylogenetic relatedness.
+In essence, $\boldsymbol{T}$ captures the phylogeny itself -- the shared evolutionary history among species.
+
+In many software tools, especially those implemented in \texttt{R} and using frequentist methods, the phylogeny ($\boldsymbol{T}$) is not estimated but instead fixed to a tree point estimate from the literature.
+The downside of this approach is that the continuous trait data can only inform our estimates of trait evolution parameters, $\boldsymbol{y_0}$ and $\mathbf{\Sigma}$ -- not the phylogeny itself.
+
+While it is possible to take this approach in \texttt{BEAST 2} as well, its hierarchical Bayesian framework allows us to go further: we can co-estimate $\boldsymbol{T}$ (i.e., the species tree or phylogeny) together with the parameters of trait evolution.
+This means we can infer trait-evolution parameters \textbf{alongside} the species divergence times and phylogenetic relationships captured in $\boldsymbol{T}$.
+In other words, \texttt{contraband} is a tool not only for studying how continuous traits evolve, but also for estimating the topology and divergence times of phylogenies.
+
+The estimation of divergence times using multiple types of data -- for example, molecular sequences combined with discrete and/or continuous morphological traits -- is known as \emph{total-evidence dating} (TED; \textcolor{red}{[citation]}).
+Among other things, \texttt{contraband} is a TED method.
+It is designed to help evolutionary biologists leverage continuous traits to reconstruct species evolutionary histories, including both divergence times and the tempo and mode of phenotypic evolution.
+
+\subsection{A quick peek under the hood}
+
+Later in this tutorial, you will be placing prior distributions on a series of parameters, as well as making modeling decisions related to things like the correlation between traits, for example, or the intraspecific variance in trait values.
+Setting up such an analysis can quickly become overwhelming, so in this section we will introduce a few implementation and statistical details to help you understand what comes next.
+
+While it is possible to directly compute the value of equation \textcolor{red}{[cite the equation above]} via matrix algebra, this is computationally expensive.
+Instead, \texttt{contraband} saves us time by using an alternative mathematical formulation \textcolor{red}{[cite Mitov's paper]} and a dynamic programming algorithm.
+The details do not matter for this tutorial, but it is important to re-write equation \textcolor{red}{[cite equation above]} as:
+
+\textcolor{red}{[first term of Eq. 6 in our paper, but expand the continuous morphological likelihood to have all the parameters we need to put a prior on during the tutorial]}.
+
+You should recognize some of these terms as they have direct counterparts in models used for molecular evolution, e.g., those involved in the morphological clock model.
+These are \textcolor{red}{[list the clock parameters here]}.
+
+Other parameters, however, are unique to multivariate Brownian models, like \textcolor{red}{[list those parameters here], and explain them}.
+These parameters can in principle be estimated with MCMC, but the accuracy of and uncertainty about our estimates will be a function of our data set size, which include the number of traits as well as the number of species (more details can be found in Zhang et al., 2024), as well as analysis running times.
+
+Among the most challenging parameters to estimate are \textcolor{red}{[list parameters here]}.
+Here, one thing that researchers can do is to \textcolor{red}{[list pre-analysis procedures, like shrinkage delta estimates]}, which amounts to \textcolor{red}{[describe what the procedure does]}.
+The assumption here is that \textcolor{red}{[list assumptions]}, which may be more or less justifiable depending on the data set.
+This is an assumption we will make in this tutorial.
+
+Given all of the above, here is a list of the parameters we want to estimate, and for which we will need to place prior distributions on:
+
+\textcolor{red}{[add an enumerate list here with all parameters]}
+
+In what follows, we will guide you through the explicit steps -- including installation of dependencies and post-processing tools -- that will
+(i) set up the analysis for inferring the above parameters, and
+(ii) help you process and visualize the results.
+
+% Time-scaled phylogenetic trees are an ultimate goal of evolutionary biology and a necessary ingredient in comparative studies. 
+% The accumulation of genomic data has resolved the tree of life to a great extent, yet timing evolutionary events remains challenging if not impossible without external information such as fossil ages and morphological characters. 
+
+% Methods for incorporating morphology in tree estimation have lagged behind their molecular counterparts, especially in the case of continuous characters that are scored at a resolution and  variable within and across species. 
+% Popular continuous character phylogenetic models are based on Brownian motion (BM) and can incorporate correlated evolution among traits, which are assumed to evolve as a random walk whose diffusion rate is the evolutionary rate. 
+% Using continuous characters in total-evidence tip dating thus not only has the potential to improve phylogenetic inference by enhancing morphological data sets but also provides natural workarounds for the issues observed under discrete-character models.
+
+% While many computational methods exist for the study of morphological character evolution, tools capable of jointly modeling molecular and morphological characters are still lacking, particularly those that simultaneously account for uncertainty in species tree topology and branch lengths. 
+% One way forward should be easily visible in the joint evolutionary modeling of all available data, whereby different sources of data inform on each other's model parameters and on the phylogeny itself.
+
+\section{Programs used in this exercise}\label{programs-used-in-this-exercise}
 %
 \subsubsection{BEAST2 - Bayesian Evolutionary Analysis Sampling Trees2}
 %
