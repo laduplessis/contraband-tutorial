@@ -61,6 +61,11 @@ As the name suggests, \texttt{contraband} implements Brownian motion (BM) models
 To understand how these models can be useful to evolutionary biologists, let's put our X-ray goggles on and look at the core of the \texttt{contraband} package: the probability density function (pdf) of the multivariate Brownian motion model -- the same pdf used for a multivariate normal distribution:
 
 \textcolor{red}{[include Eq. 1 of paper]}
+\begin{equation}
+f(\mathbf{M} | \boldsymbol{V}, \boldsymbol{y_0}) = \frac{1}{{{{(2\pi )}^{nk/2}}{{\left|  \boldsymbol{V} \right|}^{1/2}}}}\exp \left( { - \frac{1}{2}{(\text{vec}(\mathbf{M}) - {\boldsymbol{y_0}})^{\text{T}}} \boldsymbol{V}^{ - 1}(\text{vec}(\mathbf{M}) - \boldsymbol{y_0}}) \right),
+\label{eq:bmlik}
+\end{equation}
+
 
 This equation simply gives us the probability of observing our data -- that is, one or more continuous traits -- given two key parameters:  
 (i) the expected value vector (or mean vector), $\boldsymbol{y_0}$, and  
@@ -86,14 +91,24 @@ It is designed to help evolutionary biologists leverage continuous traits to rec
 Later in this tutorial, you will be placing prior distributions on a series of parameters, as well as making modeling decisions related to things like the correlation between traits, for example, or the intraspecific variance in trait values.
 Setting up such an analysis can quickly become overwhelming, so in this section we will introduce a few implementation and statistical details to help you understand what comes next.
 
-While it is possible to directly compute the value of equation \textcolor{red}{[cite the equation above]} via matrix algebra, this is computationally expensive.
-Instead, \texttt{contraband} saves us time by using an alternative mathematical formulation \textcolor{red}{[cite Mitov's paper]} and a dynamic programming algorithm.
-The details do not matter for this tutorial, but it is important to re-write equation \textcolor{red}{[cite equation above]} as:
+While it is possible to directly compute the value of equation \textcolor{red}{[cite the equation above]} \eqref{eq:bmlik} via matrix algebra, this is computationally expensive.
+Instead, \texttt{contraband} saves us time by using an alternative mathematical formulation \textcolor{red}{[cite Mitov's paper]} \cite{mitov20} and a dynamic programming algorithm.
+The details do not matter for this tutorial, but it is important to re-write equation \textcolor{red}{[cite equation above]} \eqref{eq:bmlik} as:
 
 \textcolor{red}{[first term of Eq. 6 in our paper, but expand the continuous morphological likelihood to have all the parameters we need to put a prior on during the tutorial]}.
+\begin{align}
+f(\Phi, \boldsymbol{b}_m, \boldsymbol{b}_s, \boldsymbol{\theta} | \mathbf{M}, \mathbf{D}, \mathbf{S}) \propto & f(\mathbf{M} | \Phi, \boldsymbol{b}_m, \boldsymbol {\theta}) \tag{continuous morphological likelihood} \\
+& f(\mathbf{D} | \Phi, \boldsymbol{b}_d, \boldsymbol {\theta}) \tag{discrete morphological likelihood} \\ 
+& f(\mathbf{S}|\Phi,\boldsymbol{b}_s, \boldsymbol{\theta}) \tag{molecular likelihood} \\
+& f(\boldsymbol{b}_m | \boldsymbol{\theta}) f(\boldsymbol{b}_d | \boldsymbol{\theta}) f(\boldsymbol{b}_s | \boldsymbol{\theta}) \tag{morphological and molecular clocks} \\
+& f(\Phi|\boldsymbol{\theta}) \tag{prior on phylogenetic tree topology and node times} \\
+& f(\boldsymbol{\theta}) \tag{prior on the remaining parameters}\\
+\label{eq:integrativemodel}
+\end{align}
+
 
 You should recognize some of these terms as they have direct counterparts in models used for molecular evolution, e.g., those involved in the morphological clock model.
-These are \textcolor{red}{[list the clock parameters here]}.
+These are \textcolor{red}{[list the clock parameters here]}  This joint posterior probability density gives the posterior distribution of the time-scaled phylogenetic tree ($\Phi$), morphological and molecular relative branch rates ($\boldsymbol{b}_m$, $\boldsymbol{b}_d$, $\boldsymbol{b}_s$) and all remaining parameters ($\boldsymbol{\theta}$) -- given continuous and discrete morphology data matrices, $\mathbf{M}$ and $\mathbf{D}$, respectively, and molecular sequence alignment $\mathbf{S}$.
 
 Other parameters, however, are unique to multivariate Brownian models, like \textcolor{red}{[list those parameters here], and explain them}.
 These parameters can in principle be estimated with MCMC, but the accuracy of and uncertainty about our estimates will be a function of our data set size, which include the number of traits as well as the number of species (more details can be found in Zhang et al., 2024), as well as analysis running times.
