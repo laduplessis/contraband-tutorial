@@ -60,14 +60,14 @@ As the name suggests, \texttt{contraband} implements Brownian motion (BM) models
 
 To understand how these models can be useful to evolutionary biologists, let's put our X-ray goggles on and look at the core of the \texttt{contraband} package: the probability density function (pdf) of the multivariate Brownian motion model -- the same pdf used for a multivariate normal distribution:
 
-\textcolor{red}{[include Eq. 1 of paper]}
+%\textcolor{red}{[include Eq. 1 of paper]}
 \begin{equation}
 f(\mathbf{M} | \boldsymbol{V}, \boldsymbol{y_0}) = \frac{1}{{{{(2\pi )}^{nk/2}}{{\left|  \boldsymbol{V} \right|}^{1/2}}}}\exp \left( { - \frac{1}{2}{(\text{vec}(\mathbf{M}) - {\boldsymbol{y_0}})^{\text{T}}} \boldsymbol{V}^{ - 1}(\text{vec}(\mathbf{M}) - \boldsymbol{y_0}}) \right),
 \label{eq:bmlik}
 \end{equation}
 
 
-This equation simply gives us the probability of observing our data -- that is, one or more continuous traits -- given two key parameters:  
+This equation simply gives us the probability of observing our data $\mathbf{M}$ -- that is, one or more continuous traits -- given two key parameters:  
 (i) the expected value vector (or mean vector), $\boldsymbol{y_0}$, and  
 (ii) the variance-covariance matrix, $\boldsymbol{V}$.
 If you have tried a few of the other Taming the BEAST tutorials, these two parameters are the quantities whose posterior probability distributions we want to approximate via Markov Chain Monte Carlo (MCMC).
@@ -82,7 +82,7 @@ While it is possible to take this approach in \texttt{BEAST 2} as well, its hier
 This means we can infer trait-evolution parameters \textbf{alongside} the species divergence times and phylogenetic relationships captured in $\boldsymbol{T}$.
 In other words, \texttt{contraband} is a tool not only for studying how continuous traits evolve, but also for estimating the topology and divergence times of phylogenies.
 
-The estimation of divergence times using multiple types of data -- for example, molecular sequences combined with discrete and/or continuous morphological traits -- is known as \emph{total-evidence dating} (TED; \textcolor{red}{[citation]}).
+The estimation of divergence times using multiple types of data -- for example, molecular sequences combined with discrete and/or continuous morphological traits -- is known as \emph{total-evidence dating} (TED; \cite{ronquist12}).
 Among other things, \texttt{contraband} is a TED method.
 It is designed to help evolutionary biologists leverage continuous traits to reconstruct species evolutionary histories, including both divergence times and the tempo and mode of phenotypic evolution.
 
@@ -91,36 +91,49 @@ It is designed to help evolutionary biologists leverage continuous traits to rec
 Later in this tutorial, you will be placing prior distributions on a series of parameters, as well as making modeling decisions related to things like the correlation between traits, for example, or the intraspecific variance in trait values.
 Setting up such an analysis can quickly become overwhelming, so in this section we will introduce a few implementation and statistical details to help you understand what comes next.
 
-While it is possible to directly compute the value of equation \textcolor{red}{[cite the equation above]} \eqref{eq:bmlik} via matrix algebra, this is computationally expensive.
-Instead, \texttt{contraband} saves us time by using an alternative mathematical formulation \textcolor{red}{[cite Mitov's paper]} \cite{mitov20} and a dynamic programming algorithm.
-The details do not matter for this tutorial, but it is important to re-write equation \textcolor{red}{[cite equation above]} \eqref{eq:bmlik} as:
+While it is possible to directly compute the value of equation \eqref{eq:bmlik} via matrix algebra, this is computationally expensive.
+Instead, \texttt{contraband} saves us time by using an alternative mathematical formulation (\cite{mitov20}) and a dynamic programming algorithm.
+The details do not matter for this tutorial, but it is important to re-write equation \eqref{eq:bmlik} as:
 
-\textcolor{red}{[first term of Eq. 6 in our paper, but expand the continuous morphological likelihood to have all the parameters we need to put a prior on during the tutorial]}.
-\begin{align}
-f(\Phi, \boldsymbol{b}_m, \boldsymbol{b}_s, \boldsymbol{\theta} | \mathbf{M}, \mathbf{D}, \mathbf{S}) \propto & f(\mathbf{M} | \Phi, \boldsymbol{b}_m, \boldsymbol {\theta}) \tag{continuous morphological likelihood} \\
-& f(\mathbf{D} | \Phi, \boldsymbol{b}_d, \boldsymbol {\theta}) \tag{discrete morphological likelihood} \\ 
-& f(\mathbf{S}|\Phi,\boldsymbol{b}_s, \boldsymbol{\theta}) \tag{molecular likelihood} \\
-& f(\boldsymbol{b}_m | \boldsymbol{\theta}) f(\boldsymbol{b}_d | \boldsymbol{\theta}) f(\boldsymbol{b}_s | \boldsymbol{\theta}) \tag{morphological and molecular clocks} \\
-& f(\Phi|\boldsymbol{\theta}) \tag{prior on phylogenetic tree topology and node times} \\
-& f(\boldsymbol{\theta}) \tag{prior on the remaining parameters}\\
-\label{eq:integrativemodel}
-\end{align}
+\begin{equation}
+f(\mathbf{M} | \boldsymbol{V}, \boldsymbol{y_0})  = f(\mathbf{M} | \Phi, \boldsymbol{y_0}, \boldsymbol{r}, \boldsymbol{\rho}, c_m, \boldsymbol{b}_m, \boldsymbol {\theta})\\
+\label{eq:bmlik-re}
+\end{equation}
+
+%\textcolor{red}{[first term of Eq. 6 in our paper, but expand the continuous morphological likelihood to have all the parameters we need to put a prior on during the tutorial]}.
+%\begin{align}
+%f(\Phi, \boldsymbol{b}_m, \boldsymbol{b}_s, \boldsymbol{\theta} | \mathbf{M}, \mathbf{D}, \mathbf{S}) \propto & f(\mathbf{M} | \Phi, \boldsymbol{b}_m, \boldsymbol {\theta}) \tag{continuous morphological likelihood} \\
+%& f(\mathbf{D} | \Phi, \boldsymbol{b}_d, \boldsymbol {\theta}) \tag{discrete morphological likelihood} \\ 
+%& f(\mathbf{S}|\Phi,\boldsymbol{b}_s, \boldsymbol{\theta}) \tag{molecular likelihood} \\
+%& f(\boldsymbol{b}_m | \boldsymbol{\theta}) f(\boldsymbol{b}_d | \boldsymbol{\theta}) f(\boldsymbol{b}_s | \boldsymbol{\theta}) \tag{morphological and molecular clocks} \\
+%& f(\Phi|\boldsymbol{\theta}) \tag{prior on phylogenetic tree topology and node times} \\
+%& f(\boldsymbol{\theta}) \tag{prior on the remaining parameters}\\
+%\label{eq:integrativemodel}
+%\end{align}
 
 
 You should recognize some of these terms as they have direct counterparts in models used for molecular evolution, e.g., those involved in the morphological clock model.
-These are \textcolor{red}{[list the clock parameters here]}  This joint posterior probability density gives the posterior distribution of the time-scaled phylogenetic tree ($\Phi$), morphological and molecular relative branch rates ($\boldsymbol{b}_m$, $\boldsymbol{b}_d$, $\boldsymbol{b}_s$) and all remaining parameters ($\boldsymbol{\theta}$) -- given continuous and discrete morphology data matrices, $\mathbf{M}$ and $\mathbf{D}$, respectively, and molecular sequence alignment $\mathbf{S}$.
+These are \textcolor{red}{[list the clock parameters here]}  morphological clock rate ($c_m$) and morphological relative branch rates ($\boldsymbol{b}_m$). This joint posterior probability density gives the posterior distribution of the time-scaled phylogenetic tree ($\Phi$), morphological and molecular relative branch rates ($\boldsymbol{b}_m$, $\boldsymbol{b}_d$, $\boldsymbol{b}_s$) and all remaining parameters ($\boldsymbol{\theta}$) -- given continuous and discrete morphology data matrices, $\mathbf{M}$ and $\mathbf{D}$, respectively, and molecular sequence alignment $\mathbf{S}$.
 
-Other parameters, however, are unique to multivariate Brownian models, like \textcolor{red}{[list those parameters here], and explain them}.
-These parameters can in principle be estimated with MCMC, but the accuracy of and uncertainty about our estimates will be a function of our data set size, which include the number of traits as well as the number of species (more details can be found in Zhang et al., 2024), as well as analysis running times.
+Other parameters, however, are unique to multivariate Brownian models, like \textcolor{red}{[list those parameters here], and explain them} the character values from all characters at the root of $\Phi$ ($\boldsymbol{y_0}$), a vector containing all relative character-specific evolutionary rates ($\boldsymbol{r}$),  a matrix containing between-character correlation values ($\boldsymbol{\rho}$).
+These parameters can in principle be estimated with MCMC, but the accuracy of and uncertainty about our estimates will be a function of our data set size, which include the number of traits as well as the number of species (more details can be found in \cite{zhang24}), as well as analysis running times.
 
-Among the most challenging parameters to estimate are \textcolor{red}{[list parameters here]}.
-Here, one thing that researchers can do is to \textcolor{red}{[list pre-analysis procedures, like shrinkage delta estimates]}, which amounts to \textcolor{red}{[describe what the procedure does]}.
-The assumption here is that \textcolor{red}{[list assumptions]}, which may be more or less justifiable depending on the data set.
+Among the most challenging parameters to estimate are $\boldsymbol{r}$ and $\boldsymbol{\rho}$ \textcolor{red}{[list parameters here]} .
+Here, one thing that researchers can do is to (\textcolor{red}{[list pre-analysis procedures, like shrinkage delta estimates]}) obtain intraspecific character variation and correlation from multiple characters observed across multiple individuals within a species in the phylogeny, which amounts to (\textcolor{red}{[list pre-analysis procedures, like shrinkage delta estimates]}) 1) normalizing each observed character by their corresponding unbiased estimators of intraspecific variance 2) averaging an independent correlation ($\rho = 1$) and an unbiased estimate weighted by the shrinkage parameter. The assumption here is that (\textcolor{red}{[list assumptions]}) 1) intraspecific character variation is incremented by constant measurements from multiple individuals from a species  2) character correlations are the same across species and over time, which may be more or less justifiable depending on the data set.
 This is an assumption we will make in this tutorial.
 
 Given all of the above, here is a list of the parameters we want to estimate, and for which we will need to place prior distributions on:
 
 \textcolor{red}{[add an enumerate list here with all parameters]}
+
+\begin{enumerate}[label=\arabic*)]
+\item Character evolutionary rates
+\item Character correlations
+\item Ancestral state values
+\item Tree priors
+\item Clock model priors
+\end{enumerate}
+
 
 In what follows, we will guide you through the explicit steps -- including installation of dependencies and post-processing tools -- that will
 (i) set up the analysis for inferring the above parameters, and
