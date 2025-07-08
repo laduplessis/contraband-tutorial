@@ -181,7 +181,16 @@ FigTree (\url{http://tree.bio.ed.ac.uk/software/figtree}) is a program for viewi
 
 \section{Practical Part  \uppercase\expandafter{\romannumeral 1}: Data preparation}
 
+The data sets used in this tutorial include three data types associated with 27 Carnivore species, 11 of which are extinct and 16 of which are extant. The detailed description are introduced below.
+ 
+\subsubsection{Continuous characters}
+There are 19 species of interest having 3-dimensional cranium landmarks \citep{alvarez19}, which are considered as 87 continuous traits (carnivora\_continuous\_27.nex). In particular, it is necessary to have the same dimension of landmarks from 21 \textit{Vulpes vulpes} individuals (vulples\_continuous\_data.txt).
 
+\subsubsection{Discrete characters}
+12 species of interest have discrete morphological characters that describe their basicranial, dental, postcranial anatomical features (carnivora\_discrete\_27.nex) \citep{barrett21}. There are 183 features in total and the number of character states ranges from 0 to 3. 
+
+\subsubsection{Molecular sequences}
+The molecular sequences of 12 mitochondrial genes for 14 species of interest are collected from NCBI database and are further were concatenated, aligned using MAFFT (carnivora\_dna\_27.fasta).
 
 \section{Practical  Part \uppercase\expandafter{\romannumeral 2}: Parameter and State inference using contraband}
 
@@ -217,6 +226,16 @@ and download the package contraband.
 
 contraband will only be available in BEAUti once you close and restart the
 program.
+
+\section{Practical  Part \uppercase\expandafter{\romannumeral 3}: Parameter and State inference under Brownian motion model}
+
+\subsubsection{Loading the Carnivoran Continuous data}\label{loading-the-molecular-sequences}
+
+
+
+
+\section{Practical  Part \uppercase\expandafter{\romannumeral 4}: Parameter and State inference using combined data with Brownian motion model with shrinkage method}
+
 
 \subsubsection{Loading the Carnivoran Molecular Sequences}\label{loading-the-molecular-sequences}
 
