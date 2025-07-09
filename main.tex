@@ -313,68 +313,62 @@ minutes.
 \\
 First, we can open the \lstinline!*.log! file in tracer to check if the
 MCMC has converged. The ESS value should be above 200 for almost all
-values and especially for the posterior estimates. 
-%
-%\begin{figure}
-%    \centering
-%    \includegraphics[width=0.700000\textwidth]{figures/LogPosterior.png}
-%    \caption{Check if the posterior converged.}
-%    \label{fig:example1}
-%\end{figure}
-%
-%\item Next, we can have a look at the inferred effective population sizes. New
-%York is inferred to have the largest effective population size before
-%Hong Kong and New Zealand. This tells us that two lineages that are in
-%the New Zealand are expected to coalesce quicker than two lineages in
-%Hong Kong or New York.
-%
-%\begin{figure}
-%    \centering
-%    \includegraphics[width=0.700000\textwidth]{figures/LogNe.png}
-%    \caption{Compare the different inferred effective population sizes.}
-%    \label{fig:example1}
-%\end{figure}
-%
-%In this example, we have relatively little information about the
-%effective population sizes of each location. This can lead to estimates
-%that are greatly informed by the prior. Additionally, there can be great
-%differences between median and mean estimates. The median estimates are
-%generally more reliable since they are less influence by extreme values.
-%
-%\begin{figure}
-%    \centering
-%    \includegraphics[width=0.700000\textwidth]{figures/MeanMedian.png}
-%    \caption{Differences between Mean and Meadian estimates.}
-%    \label{fig:example1}
-%\end{figure}
-%
-%We can then look at the inferred migration rates. The migration rates
-%have the label b\_migration.*, meaning that they are backwards in time
-%migration rates. The highest rates are from New York to Hong Kong.
-%Because they are backwards in time migration rates, this means that
-%lineages from New York are inferred to be likely from Hong Kong if we're
-%going backwards in time. In the inferred phylogenies, we should
-%therefore make the observation that lineages ancestral to samples from
-%New York are inferred to be from the Hong Kong backwards.
-%
-%\begin{figure}
-%    \centering
-%    \includegraphics[width=0.700000\textwidth]{figures/LogMigration.png}
-%    \caption{Compare the inferrred migration rates.}
-%    \label{fig:example1}
-%\end{figure}
+values and especially for the posterior estimates (\autoref{fig:bm_res1}).
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.700000\textwidth]{figures/results/BM_posterior.png}
+    \caption{Check if the posterior converged.}
+    \label{fig:bm_res1}
+\end{figure}
+
+\item  The estimated evolutionary rate  (\autoref{fig:bm_res2})
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.700000\textwidth]{figures/results/BM_evo_rate.png}
+    \caption{Evolutionary rate shared by 87 characters.}
+    \label{fig:bm_res2}
+\end{figure}
+
+\item The estimated character correlations (\autoref{fig:bm_res3})
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.700000\textwidth]{figures/results/BM_covValues.png}
+    \caption{Character correlations among 87 characters.}
+    \label{fig:bm_res3}
+\end{figure}
+
+\item The estimated ancestral states at the root (\autoref{fig:bm_res4})
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.700000\textwidth]{figures/results/BM_rootValues.png}
+    \caption{87 trait values at the root of the tree.}
+    \label{fig:bm_res4}
+\end{figure}
+
+\item The inferred morphological clock model (\autoref{fig:bm_res5})
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.700000\textwidth]{figures/results/BM_clock_sigma.png}
+    \caption{Compare the inferrred migration rates.}
+    \label{fig:bm_res5}
+\end{figure}
 
 \item Make the summary tree using TreeAnnotator
 \\
-Open \textbf{TreeAnnotator} and then set the options as in the Figure \ref{fig:example1} below. You have to specify the \textbf{Burnin percentage}, \textbf{Target tree type},  \textbf{Node heights}, \textbf{Input Tree File} and the \textbf{Output File}.
-Use the logged trees in the file  \lstinline!carnivora_27.trees! as \textbf{Input Tree File}. Name output file \lstinline!carnivora_27_mcc.tree!.
+Open \textbf{TreeAnnotator} and then set the options including \textbf{Burnin percentage}, \textbf{Target tree type},  \textbf{Node heights}, \textbf{Input Tree File} and the \textbf{Output File}.
+Use the logged trees in the file  \lstinline!carnivora_continuous_27_tree_bm.trees! as \textbf{Input Tree File}. Name output file \lstinline!carnivora_continuous_27_bm_mcc.tree!.
 After clicking \textbf{Run} the program should summarize the trees.
-
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.700000\textwidth]{figures/results/BM_MCC_tree.png}
+    \caption{Summarised MCC tree of logged trees under Brownian motion model.}
+    \label{fig:bm_res6}
+\end{figure}
 \end{itemize}
 
 
 \section{Practical  Part \uppercase\expandafter{\romannumeral 4}: Parameter and State inference using combined data with Brownian motion model with shrinkage method}
-
 \subsubsection{Loading the Carnivoran data sets}
 We first load the continuous data and parse the fossil ages as is mentioned in previous sections \ref{load-continuous-data} and \ref{parse-fosill-age}. Then, in the "Partitions" panel, we continue to load the Carnivoran molecular sequences via \emph{File \textgreater{}\textgreater{} Import Alignment}. Finally, we add the discrete characters by \emph{File \textgreater{}\textgreater{} Add Morphological Data}. As is shown in \autoref{fig:example8}, 
 
@@ -454,35 +448,39 @@ minutes.
 \subsubsection{Post analysis}
 
 \begin{itemize}
+\item Inferred clock models for continuous data, discrete data and molecular sequences (\autoref{fig:bm_res6} and \autoref{fig:bm_res7})
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.700000\textwidth]{figures/results/EST_clock_rate.png}
+    \caption{Estimated clock rates.}
+    \label{fig:bm_res6}
+\end{figure}
 
-\item Analyse the log file using Tracer
-\\
-First, we can open the \lstinline!*.log! file in tracer to check if the
-MCMC has converged. The ESS value should be above 200 for almost all
-values and especially for the posterior estimates. 
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.700000\textwidth]{figures/results/BM_clock_sigma.png}
+    \caption{Estimated standard deviations.}
+    \label{fig:bm_res7}
+\end{figure}
 
-\item Make the summary tree using TreeAnnotator
-
-\item Analyse and compare the MCC trees
+\item Make the summary tree using TreeAnnotator (\autoref{fig:bm_res8})
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.700000\textwidth]{figures/results/EST_tree_height.png}
+    \caption{Summarised MCC trees estimated by combined data sets.}
+    \label{fig:bm_res8}
+\end{figure}
 \end{itemize}
 
 
 \section{Errors that can occur (Work in progress)}
 
 One of the errors message that can occur regularly is the following:
-\emph{Infinity likelihood}.
-This occurs when the integration step size of the ODE's to compute the probability of observing a phylogenetic tree in MASCOT is becoming too small.
-This generally occurs if at least one migration rate is really large or at least one effective population size is really small (i.e. the coalescent rate is really high). This causes integration steps to be extremely small, which in turn would require a lot of time to compute the probability of a phylogenetic tree under MASCOT. Instead of doing that, this state is rejected by assigning its log probability the value negative infinity.
-%
-%This error can have different origins and a likely incomplete list is the following:
-%\begin{enumerate}
-%\item The priors on migration rates put too much weight on really high rates. To fix this, reconsider your priors on the migration rates. Particularly, check if the prior on the migration rates make sense in comparison to the height of the tree. If, for example, the tree has a height of 1000 years, but the prior on the migration rate is exponential with mean 1, then the prior assumption is that between any two states, we expected approximately
-% 1000 migration events.
-%\item  The prior on the effective population sizes is too low, meaning that the prior on the coalescent rates (1 over the effective population size) is too high. This can for example occur when the prior on the effective population size was chosen to be 1/X. To fix, reconsider your prior on the effective population size.
-%\item  There is substantial changes of the effective population sizes and/or migration rates over time that are not modeled. In that case, changes in the effective population sizes or migration rates have to be explained by population structure, which can again lead to some effective population sizes being very low and some migration rates being very high. In that case, there is unfortunately not much that can be done, since MASCOT is not an appropriate model for the dataset.
-%\item  There is strong subpopulation structure within the different subpopulations used. In that case, reconsider if the individual sub-populations used are reasonable.
-%\end{enumerate}
+\emph{Infinity likelihood}
 
+\emph{Negative branch length}
+
+\emph{Unequal likelihoods}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
