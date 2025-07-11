@@ -111,29 +111,34 @@ f(\mathbf{M} | \boldsymbol{V}, \boldsymbol{y_0})  = f(\mathbf{M} | \Phi, \boldsy
 %\label{eq:integrativemodel}
 %\end{align}
 
+As mentioned above, $\mathbf{M}$ contains our continuous-character data, it is a matrix whose dimensions are the number of species $\times$ the number of characters.
+On the right-hand side of this equation, you should further recognize some of the terms that have direct counterparts in models used for molecular evolution, e.g., those involved in the morphological clock model.
+These are the morphological global clock rate ($c_m$) and relative branch rates ($\boldsymbol{b}_m$).
+Other parameters, however, are unique to multivariate Brownian models, like the character values from all characters at the root of $\Phi$ ($\boldsymbol{y_0}$), a vector containing all relative character-specific evolutionary rates ($\boldsymbol{r}$), and the between-character correlation matrix ($\boldsymbol{\rho}$).
+All of these parameters can in principle be estimated with MCMC, but the accuracy of and uncertainty about our estimates will be a function of our data set size, which include the number of traits and of species (more details can be found in \cite{zhang24}), as well as analysis running times.
 
-You should recognize some of these terms as they have direct counterparts in models used for molecular evolution, e.g., those involved in the morphological clock model.
-These are \textcolor{red}{[list the clock parameters here]}  morphological clock rate ($c_m$) and morphological relative branch rates ($\boldsymbol{b}_m$). This joint posterior probability density gives the posterior distribution of the time-scaled phylogenetic tree ($\Phi$), morphological and molecular relative branch rates ($\boldsymbol{b}_m$, $\boldsymbol{b}_d$, $\boldsymbol{b}_s$) and all remaining parameters ($\boldsymbol{\theta}$) -- given continuous and discrete morphology data matrices, $\mathbf{M}$ and $\mathbf{D}$, respectively, and molecular sequence alignment $\mathbf{S}$.
+Among the most challenging parameters to estimate is $\boldsymbol{\rho}$.
+For example, attempting to estimate $\boldsymbol{\rho}$ with MCMC means we have a potentially very large number of parameters that will be very hard to identify unless one has a very large phylogeny (which in turn would make the analysis prohibitively slow).
+One thing we can do is obtain intraspecific character data from one of the species in the phylogeny, and then estimate character correlations from that.
+In short, one can obtain an estimate of $\boldsymbol{\rho}$, $\widehat{\boldsymbol{\rho}}$, from characters scored in many individuals of a single species, and then assume this estimate is true and constant across the phylogeny -- i.e., there is no MCMC sampling of character correlation parameters.
 
-Other parameters, however, are unique to multivariate Brownian models, like \textcolor{red}{[list those parameters here], and explain them} the character values from all characters at the root of $\Phi$ ($\boldsymbol{y_0}$), a vector containing all relative character-specific evolutionary rates ($\boldsymbol{r}$),  a matrix containing between-character correlation values ($\boldsymbol{\rho}$).
-These parameters can in principle be estimated with MCMC, but the accuracy of and uncertainty about our estimates will be a function of our data set size, which include the number of traits as well as the number of species (more details can be found in \cite{zhang24}), as well as analysis running times.
+Depending on the dimensions of $\widehat{\boldsymbol{\rho}}$, however, it can become unwieldly: it may become nearly singular, its determinant approaching 0, and its inverse blowing up.
+(Down the line, we obviously cannot compute $f(\mathbf{M} | \boldsymbol{V}, \boldsymbol{y_0})$!)
+Here, we can borrow a technique often referred to as ``regularization'': we can ``shrink'' $\widehat{\boldsymbol{\rho}}$ towards the identity matrix $\boldsymbol{I}$ -- which represents the correlation matrix of a data set where characters are uncorrelated -- and obtain what we call a ridge estimator of $\boldsymbol{\rho}$, $\boldsymbol{\rho}^*$.
+Doing so effectively adds some values to the off-diagonals of the correlation matrix, making it better conditioned; the extent to which we ``shrink`` $\widehat{\boldsymbol{\rho}}$ towards the identity matrix is captured in a tuning (``shrinkage'') parameter, $\delta$.
+(As you will see later in this tutorial, we will have to specify $\delta$ to run one of our inference analyses.)
+The more uncertain we are about character correlations, because we have way too many characters for way too few species, say, the larger $\delta$ should be.
+At any rate, we will not have to worry too much about the details of how to obtain $\delta$.
+There are methods for doing just that in the literature, and we will use them.
 
-Among the most challenging parameters to estimate are $\boldsymbol{r}$ and $\boldsymbol{\rho}$ \textcolor{red}{[list parameters here]} .
-Here, one thing that researchers can do is to (\textcolor{red}{[list pre-analysis procedures, like shrinkage delta estimates]}) obtain intraspecific character variation and correlation from multiple characters observed across multiple individuals within a species in the phylogeny, which amounts to (\textcolor{red}{[list pre-analysis procedures, like shrinkage delta estimates]}) 1) normalizing each observed character by their corresponding unbiased estimators of intraspecific variance 2) averaging an independent correlation ($\rho = 1$) and an unbiased estimate weighted by the shrinkage parameter. The assumption here is that (\textcolor{red}{[list assumptions]}) 1) intraspecific character variation is incremented by constant measurements from multiple individuals from a species  2) character correlations are the same across species and over time, which may be more or less justifiable depending on the data set.
-This is an assumption we will make in this tutorial.
-
-Given all of the above, here is a list of the parameters we want to estimate, and for which we will need to place prior distributions on:
-
-\textcolor{red}{[add an enumerate list here with all parameters]}
+Overall, here is a list of the continuous-trait model parameters that we want to estimate, and for which we will need to place prior distributions on:
 
 \begin{enumerate}[label=\arabic*)]
-\item Character evolutionary rates
-\item Character correlations
-\item Ancestral state values
-\item Tree priors
-\item Clock model priors
+  \item Character-specific evolutionary rates, $\boldsymbol{r}$,
+  \item Character correlations, $\boldsymbol{\rho}$,
+  \item Ancestral state values, $\boldsymbol{{y_0}}$,
+  \item Morphological clock parameters, \textcolor{red}{[write their symbols -- only for parameters we put priors on]}
 \end{enumerate}
-
 
 In what follows, we will guide you through the explicit steps -- including installation of dependencies and post-processing tools -- that will
 (i) set up the analysis for inferring the above parameters, and
