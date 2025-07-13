@@ -137,7 +137,7 @@ Overall, here is a list of the continuous-trait model parameters that we want to
   \item Character-specific evolutionary rates, $\boldsymbol{r}$,
   \item Character correlations, $\boldsymbol{\rho}$,
   \item Ancestral state values, $\boldsymbol{{y_0}}$,
-  \item Morphological clock parameters, \textcolor{red}{[write their symbols -- only for parameters we put priors on]}
+  \item Morphological clock parameters, relative branch rates $\boldsymbol{b}_m$ and global evolutionary rate $c_m$
 \end{enumerate}
 
 In what follows, we will guide you through the explicit steps -- including installation of dependencies and post-processing tools -- that will
@@ -237,7 +237,7 @@ Our TED analysis will leverage a published geometric-morphometric data set consi
 This data can be found in file \texttt{carnivora\_continuous\_27.nex} attached to this tutorial.
 
 The same cranium landmarks have also been scored in 21 \textit{Vulpes vulpes} (one of the focal carnivore species) individuals.
-This intraspecific data will be used in the analyses the bypasses the estimation of character correlations ($\boldsymbol{\rho}$), and can be found in attached file \textcolor{red}{\texttt{vulpes\_continuous\_data.txt} [Rong: there is a typo in the name of the file, which I corrected in the text here]}.
+This intraspecific data will be used in the analyses the bypasses the estimation of character correlations ($\boldsymbol{\rho}$), and can be found in attached file \texttt{vulpes\_continuous\_data.txt}.
 
 \subsubsection{Discrete characters}
 12 species of interest have discrete morphological characters that describe their basicranial, dental, postcranial anatomical features (carnivora\_discrete\_27.nex) \citep{barrett21}. There are 183 features in total and the number of character states ranges from 0 to 3. 
