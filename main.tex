@@ -49,13 +49,13 @@ Total-evidence dating and trait-evolution evolutionary inference using phylogene
 \section{Background}\label{background}
 
 % \begin{quote}
-\noindent \textbf{Bird's-eye view}. This tutorial shows how to use the \texttt{contraband} package in \texttt{BEAST 2} to model continuous trait evolution along a phylogeny with Brownian motion.
+\noindent \textbf{Bird's-eye view}. This tutorial shows how to use the \texttt{contraband} package in \texttt{BEAST2} to model continuous trait evolution along a phylogeny with Brownian motion.
 Unlike methods that assume a ``known'', fixed tree, \texttt{contraband} lets you estimate the tempo and mode of trait evolution simultaneously with both species relationships and divergence times.
 % \end{quote}
 
 \subsection{What is \texttt{contraband} for}
 
-In this tutorial, we will walk you through running a simple analysis with the \texttt{contraband} (\textbf{con}tinuous \textbf{tra}its \textbf{b}rowni\textbf{an} mo\textbf{d}els) \texttt{BEAST 2} package.
+In this tutorial, we will walk you through running a simple analysis with the \texttt{contraband} (\textbf{con}tinuous \textbf{tra}its \textbf{b}rowni\textbf{an} mo\textbf{d}els) \texttt{BEAST2} package.
 As the name suggests, \texttt{contraband} implements Brownian motion (BM) models for the evolution of continuous traits on a phylogeny.
 
 To understand how these models can be useful to evolutionary biologists, let's put our X-ray goggles on and look at the core of the \texttt{contraband} package: the probability density function (pdf) of the multivariate Brownian motion model -- the same pdf used for a multivariate normal distribution:
@@ -78,7 +78,7 @@ In essence, $\boldsymbol{T}$ captures the phylogeny itself -- the shared evoluti
 In many software tools, especially those implemented in \texttt{R} and using frequentist methods, the phylogeny ($\boldsymbol{T}$) is not estimated but instead fixed to a tree point estimate from the literature.
 The downside of this approach is that the continuous trait data can only inform our estimates of trait evolution parameters, $\boldsymbol{y_0}$ and $\mathbf{\Sigma}$ -- not the phylogeny itself.
 
-While it is possible to take this approach in \texttt{BEAST 2} as well, its hierarchical Bayesian framework allows us to go further: we can co-estimate $\boldsymbol{T}$ (i.e., the species tree or phylogeny) together with the parameters of trait evolution.
+While it is possible to take this approach in \texttt{BEAST2} as well, its hierarchical Bayesian framework allows us to go further: we can co-estimate $\boldsymbol{T}$ (i.e., the species tree or phylogeny) together with the parameters of trait evolution.
 This means we can infer trait-evolution parameters \textbf{alongside} the species divergence times and phylogenetic relationships captured in $\boldsymbol{T}$.
 In other words, \texttt{contraband} is a tool not only for studying how continuous traits evolve, but also for estimating the topology and divergence times of phylogenies.
 
@@ -114,7 +114,7 @@ f(\mathbf{M} | \boldsymbol{V}, \boldsymbol{y_0})  = f(\mathbf{M} | \Phi, \boldsy
 As mentioned above, $\mathbf{M}$ contains our continuous-character data, it is a matrix whose dimensions are the number of species $\times$ the number of characters.
 On the right-hand side of this equation, you should further recognize some of the terms that have direct counterparts in models used for molecular evolution, e.g., those involved in the morphological clock model.
 These are the morphological global clock rate ($c_m$) and relative branch rates ($\boldsymbol{b}_m$).
-Other parameters, however, are unique to multivariate Brownian models, like the character values from all characters at the root of $\Phi$ ($\boldsymbol{y_0}$), a vector containing all relative character-specific evolutionary rates ($\boldsymbol{r}$), and the between-character correlation matrix ($\boldsymbol{\rho}$).
+Other parameters, however, are unique to multivariate Brownian models, like the character values from all characters ($\boldsymbol{y_0}$) at the root of the tree ($\Phi$), a vector containing all relative character-specific evolutionary rates ($\boldsymbol{r}$), and the between-character correlation matrix ($\boldsymbol{\rho}$).
 All of these parameters can in principle be estimated with MCMC, but the accuracy of and uncertainty about our estimates will be a function of our data set size, which include the number of traits and of species (more details can be found in \cite{zhang24}), as well as analysis running times.
 
 Among the most challenging parameters to estimate is $\boldsymbol{\rho}$.
@@ -196,7 +196,7 @@ We will use FigTree v1.4.4.
 \subsection{Installing dependencies}
 
 Total-evidence dating of phylogenies is a complex task that requires a series of models, a few of which are implemented in their own BEAST2 packages.
-The main package for this tutorial is called \texttt{contraband} and it implements Brownian models for the evolution of multiple characters on phylogenetic trees.
+The main package for this tutorial is called \texttt{contraband} and it implements Brownian motion models for the evolution of multiple characters on phylogenetic trees.
 
 % In this tutorial we will estimate evolutionary rates,  trait correlations, ancestral states and phylogenetic trees using the Brownian motion implemented in BEAST2, contraband.
 
@@ -212,9 +212,8 @@ The main package for this tutorial is called \texttt{contraband} and it implemen
 %   Learn how to read the output of a ``contraband" analysis
 % \end{itemize}
 
-In order to install \texttt{contraband}, we have to download it using the BEAUTi \textcolor{red}{[2?]} package manager.
-Open BEAUti2, go to \emph{File \textgreater{}\textgreater{} Manage Packages}, and click on the \texttt{contraband} link (Figure 1).
-The package will become available in BEAUti2 once you close and restart the program.
+In order to install \texttt{contraband}, we have to download it using the BEAST2 package manager.
+Open BEAUti2, go to \emph{File \textgreater{}\textgreater{} Manage Packages}, and click on the \texttt{contraband} link and then clicking \emph{Install/Upgrade} (Figure~\ref{fig:example1}).
 
 \begin{figure}[!htbp]
     \centering
@@ -224,33 +223,39 @@ The package will become available in BEAUti2 once you close and restart the prog
 \end{figure}
 
 This tutorial will also make use of a few other packages;
-these are \texttt{bdtree}, \texttt{sampled-ancestors}, and \texttt{morph-models}.
+these are \texttt{bdtree} (birth-death sequential sampling trees), \texttt{SA} (sampled-ancestor trees), and \texttt{MM} (morphological character evolution models). Please also install these packages if they are not already installed! 
+
 The first two implement speciation and fossilization models (for evaluating the probability of phylogenies themselves), and the latter implements models for the evolution of discrete morphological characters.
-These packages have a dedicated tutorial (here \textcolor{red}{[https://taming-the-beast.org/tutorials/Total-Evidence-Tutorial/]}) and will not be discussed further in the present exercise.
+The SA and MM packages have two dedicated tutorials on the Taming the BEAST website (\href{https://taming-the-beast.org/tutorials/FBD-tutorial/}{Divergence Time Estimation tutorial} and \href{https://taming-the-beast.org/tutorials/Total-Evidence-Tutorial/}{Total Evidence tutorial}) and will not be discussed further in the present exercise.
+
+The newly installed packages will become available in BEAUti2 once you close and restart the program.
+
 
 \subsection{Preparing the data}
 
-The data sets used in this tutorial include three types of data -- molecular, discrete morphology, continuous morphology -- scored fo up to 27 Carnivore species (11 of which are extinct and 16 of which are extant).
+The data sets used in this tutorial include three types of data -- molecular, discrete morphology and continuous morphology -- scored for up to 27 Carnivore species (11 of which are extinct and 16 of which are extant).
 
 \subsubsection{Continuous characters}
-Our TED analysis will leverage a published geometric-morphometric data set consisting of 29 three-dimensional (3D) cranium landmarks \citep{alvarez19}, each dimension of which will be treated as a separate continuous characters (i.e., we will have a total of 87 continuous characters).
+Our TED analysis will leverage a published geometric-morphometric data set consisting of 29 three-dimensional (3D) cranium landmarks \citep{alvarez19}, each dimension of which will be treated as a separate continuous character (i.e., we will have a total of 87 continuous characters).
 This data can be found in file \texttt{carnivora\_continuous\_27.nex} attached to this tutorial.
 
 The same cranium landmarks have also been scored in 21 \textit{Vulpes vulpes} (one of the focal carnivore species) individuals.
-This intraspecific data will be used in the analyses the bypasses the estimation of character correlations ($\boldsymbol{\rho}$), and can be found in attached file \texttt{vulpes\_continuous\_data.txt}.
+This intraspecific data will be used in the analyses to bypass the estimation of character correlations ($\boldsymbol{\rho}$), and can be found in the attached file \texttt{vulpes\_continuous\_data.txt}.
 
 \subsubsection{Discrete characters}
-12 species of interest have discrete morphological characters that describe their basicranial, dental, postcranial anatomical features (carnivora\_discrete\_27.nex) \citep{barrett21}. There are 183 features in total and the number of character states ranges from 0 to 3. 
+12 species of interest have discrete morphological characters that describe their basicranial, dental and postcranial anatomical features (\texttt{carnivora\_discrete\_27.nex}) \citep{barrett21}. There are 183 features in total and the number of character states ranges from 0 to 3. 
 
 \subsubsection{Molecular sequences}
-The molecular sequences of 12 mitochondrial genes for 14 species of interest are collected from NCBI database and are further were concatenated, aligned using MAFFT (carnivora\_dna\_27.fasta).
+The molecular sequences of 12 mitochondrial genes for 14 species of interest were collected from the NCBI database, concatenated and aligned using MAFFT (\texttt{carnivora\_dna\_27.fasta}).
 
 
 \section{Practical  Part \uppercase\expandafter{\romannumeral 3}: Parameter and State inference under Brownian motion model}
 
 \subsubsection{Loading the Carnivoran Continuous data}\label{load-continuous-data}
 
-The continuous characters  can be found in the \emph{data} folder named \emph{carnivora\_continuous\_27.nex}. It can be either drag and dropped into BEAUti "Partitions" panel or added using BEAUti’s menu system via \emph{File \textgreater{}\textgreater{} Load Continuous Data}. Once the character are loaded successfully into BEAUTi, the panel will show
+The continuous characters  can be found in the \texttt{data} folder named \texttt{carnivora\_continuous\_27.nex}. It can be either dragged and dropped into BEAUti "Partitions" panel or added using BEAUti’s menu system via \emph{File \textgreater{}\textgreater{} Load Continuous Data}. Once the character are loaded successfully into BEAUTi, the panel will show
+
+\textcolor{red}{\textbf{ THIS DOESN'T SEEM TO WORK AND SECTION INCOMPLETE!!!}}
 
 
 \subsubsection{Get the fossil ages (Tip Dates)}\label{parse-fosill-age}
