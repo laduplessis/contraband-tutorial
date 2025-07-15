@@ -137,7 +137,7 @@ Overall, here is a list of the continuous-trait model parameters that we want to
   \item Character-specific evolutionary rates, $\boldsymbol{r}$,
   \item Character correlations, $\boldsymbol{\rho}$,
   \item Ancestral state values, $\boldsymbol{{y_0}}$,
-  \item Morphological clock parameters, \textcolor{red}{[write their symbols -- only for parameters we put priors on]}
+  \item Morphological clock parameters, relative branch rates $\boldsymbol{b}_m$ and global evolutionary rate $c_m$
 \end{enumerate}
 
 In what follows, we will guide you through the explicit steps -- including installation of dependencies and post-processing tools -- that will
@@ -237,7 +237,7 @@ Our TED analysis will leverage a published geometric-morphometric data set consi
 This data can be found in file \texttt{carnivora\_continuous\_27.nex} attached to this tutorial.
 
 The same cranium landmarks have also been scored in 21 \textit{Vulpes vulpes} (one of the focal carnivore species) individuals.
-This intraspecific data will be used in the analyses the bypasses the estimation of character correlations ($\boldsymbol{\rho}$), and can be found in attached file \textcolor{red}{\texttt{vulpes\_continuous\_data.txt} [Rong: there is a typo in the name of the file, which I corrected in the text here]}.
+This intraspecific data will be used in the analyses the bypasses the estimation of character correlations ($\boldsymbol{\rho}$), and can be found in attached file \texttt{vulpes\_continuous\_data.txt}.
 
 \subsubsection{Discrete characters}
 In addition to continuous characters, our data set includes discrete morphological characters, scored in 12 of the carnivoran species.
@@ -535,13 +535,14 @@ One of the errors message that can occur regularly is the following:
 
 \emph{Unequal likelihoods}
 
-
+\clearpage
 %%%%%%%%%%%%%%%%%%%%%%%
 % Tutorial disclaimer %
 %%%%%%%%%%%%%%%%%%%%%%%
 % Please do not change the license
 % Add the author names and relevant links
 % Add any other aknowledgments here
+\href{http://creativecommons.org/licenses/by/4.0/}{\includegraphics[scale=0.8]{figures/ccby.pdf}} This tutorial was written by Rong Zhang and F\'{a}bio K. Mendes for \href{https://taming-the-beast.github.io}{Taming the BEAST} and is licensed under a \href{http://creativecommons.org/licenses/by/4.0/}{Creative Commons Attribution 4.0 International License}. 
 
 %%%%%%%%%%%%%%%%%%%%
 % Do NOT edit this %
