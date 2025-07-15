@@ -253,20 +253,14 @@ This intraspecific data will be used in the analyses to bypass the estimation of
 %These sequences have been aligned and concatenated (\texttt{carnivora\_dna\_27.fasta}).
 The molecular sequences of 12 mitochondrial genes for 14 species of interest were collected from the NCBI database, concatenated and aligned using MAFFT (\texttt{carnivora\_dna\_27.fasta}).
 
-\section{Bayesian phylogenetic inference using multiple continuous morphological characters (and more!)}
+\section{Practical  Part \uppercase\expandafter{\romannumeral 1}: Bayesian phylogenetic inference using multiple continuous morphological characters (and more!)}
 
-\textcolor{orange}{
 The following two sections will walk you through the required steps for setting up a couple of different analyses.
 The first shall carry out Bayesian inference of divergence times using continuous morphology only; the main player here is the Brownian model implemented in the \texttt{contraband} package.
 In the second analysis we will set up an integrative model with components for each type of data (described above) -- this will be a full-blown total-evidence dating analysis with all the data we have.
-}
+Like in other tutorials, we will use BEAUti2 as a tool for specifying BEAST2 .XML files for running our analyses.
 
-\textcolor{orange}{Like in other tutorials, we will use BEAUti2 as a tool for specifying BEAST2 .XML files for running our analyses.}
-
-\subsection{Phylogenetic inference with Brownian motion}
-
-
-
+%\subsection{Phylogenetic inference with Brownian motion}
 %We start by opening BEAUti2 and loading the continuous morphology data available for our carnivoran species.
 %This data can be found in \texttt{data/carnivora\_continuous\_27.nex}.
 %You can then either drag and drop that file into BEAUti2's ``Partitions'' panel, or use the system's drop-down menu and do File > Load Continuous Data.
@@ -274,7 +268,14 @@ In the second analysis we will set up an integrative model with components for e
 \subsection{Setting up the analysis in BEAUti}
 \subsubsection{Loading the Carnivoran Continuous data}\label{load-continuous-data}
 
-The continuous characters  can be found in the \texttt{data} folder named \texttt{carnivora\_continuous\_27.nex}. It can be either dragged and dropped into BEAUti "Partitions" panel or added using BEAUti’s menu system via \emph{File \textgreater{}\textgreater{} Load Continuous Data}. Once the character are loaded successfully into BEAUTi, the panel will show
+The continuous characters  can be found in the \texttt{data} folder named \texttt{carnivora\_continuous\_27.nex}. It can be either dragged and dropped into BEAUti "Partitions" panel or added using BEAUti’s menu system via \emph{File \textgreater{}\textgreater{} Load Continuous Data}. Once the characters are loaded successfully into BEAUTi, the panel will show the number of species and number of characters in the columns "Taxa" and "Sites" correspondingly (\autoref{fig:example0}). 
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.700000\textwidth]{figures/BMPartition.png}
+    \caption{Loading the continuous data.}
+    \label{fig:example0}
+\end{figure}
 
 %\subsubsection{Get the fossil ages (tip dates)}\label{parse-fosill-age}
 %
@@ -490,12 +491,12 @@ After clicking \textbf{Run} the program should summarize the trees.
 \end{figure}
 
 
-\section{Practical  Part \uppercase\expandafter{\romannumeral 4}: Parameter and State inference using combined data with the Brownian motion model combined with a shrinkage method}
+\section{Practical  Part \uppercase\expandafter{\romannumeral 2}: Parameter and State inference using combined data with the Brownian motion model combined with a shrinkage method}
 
 \subsection{Setting up the analysis in BEAUti}
 
 \subsubsection{Loading the Carnivoran data sets}
-We first load the continuous data and parse the fossil ages as in sections~\ref{load-continuous-data} and~\ref{parse-fosill-age}. Then, in the "Partitions" panel, we also load the Carnivoran molecular sequences via \emph{File \textgreater{}\textgreater{} Import Alignment}. Finally, we add the discrete characters by \emph{File \textgreater{}\textgreater{} Add Morphological Data}. As is shown in \autoref{fig:example8}, 
+We first load the continuous data and parse the fossil ages as in sections~\ref{load-continuous-data} and~\ref{parse-fosill-age}. Then, in the "Partitions" panel, we also load the Carnivoran molecular sequences via \emph{File \textgreater{}\textgreater{} Import Alignment}. Finally, we add the discrete characters by \emph{File \textgreater{}\textgreater{} Add Morphological Data}. As is shown in \autoref{fig:example8}, the two rows with "nucleotide" as Data Type indicate that the molecular sequences are partitioned based on the codon positions, i.e., first and second codon positions for the first partition and the third codon positions for the second partition. Likewise, the last  three rows with "standard" as Data Type indicate that the discrete data are partitioned based on the number of states the characters have. In this data set, the discrete characters are described by the states the number of which ranges from 2 to 4.  
 
 \begin{figure}
     \centering
