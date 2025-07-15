@@ -88,7 +88,7 @@ It is designed to help evolutionary biologists leverage continuous traits to rec
 
 \subsection{A quick peek under the hood}
 
-Later in this tutorial, you will be placing prior distributions on a series of parameters, as well as making modeling decisions related to things like the correlation between traits, for example, or the intraspecific variance in trait values.
+Later in this tutorial, you will be placing prior distributions on a series of parameters, as well as making modeling decisions related to things like the correlation between characters, for example, or the intraspecific variance in trait values.
 Setting up such an analysis can quickly become overwhelming, so in this section we will introduce a few implementation and statistical details to help you understand what comes next.
 
 While it is possible to directly compute the value of equation \eqref{eq:bmlik} via matrix algebra, this is computationally expensive.
@@ -114,18 +114,18 @@ f(\mathbf{M} | \boldsymbol{V}, \boldsymbol{y_0})  = f(\mathbf{M} | \Phi, \boldsy
 As mentioned above, $\mathbf{M}$ contains our continuous-character data, it is a matrix whose dimensions are the number of species $\times$ the number of characters.
 On the right-hand side of this equation, you should further recognize some of the terms that have direct counterparts in models used for molecular evolution, e.g., those involved in the morphological clock model.
 These are the morphological global clock rate ($c_m$) and relative branch rates ($\boldsymbol{b}_m$).
-Other parameters, however, are unique to multivariate Brownian models, like the character values from all characters at the root of $\Phi$ ($\boldsymbol{y_0}$), a vector containing all relative character-specific evolutionary rates ($\boldsymbol{r}$), and the between-character correlation matrix ($\boldsymbol{\rho}$).
+Other parameters, however, are unique to multivariate Brownian models, like the character values from all characters at the root of the tree ($\boldsymbol{y_0}$), a vector containing all relative character-specific evolutionary rates ($\boldsymbol{r}$), and the between-character correlation matrix ($\boldsymbol{\rho}$).
 All of these parameters can in principle be estimated with MCMC, but the accuracy of and uncertainty about our estimates will be a function of our data set size, which include the number of traits and of species (more details can be found in \cite{zhang24}), as well as analysis running times.
 
 Among the most challenging parameters to estimate is $\boldsymbol{\rho}$.
 For example, attempting to estimate $\boldsymbol{\rho}$ with MCMC means we have a potentially very large number of parameters that will be very hard to identify unless one has a very large phylogeny (which in turn would make the analysis prohibitively slow).
 One thing we can do is obtain intraspecific character data from one of the species in the phylogeny, and then estimate character correlations from that.
-In short, one can obtain an estimate of $\boldsymbol{\rho}$, $\widehat{\boldsymbol{\rho}}$, from characters scored in many individuals of a single species, and then assume this estimate is true and constant across the phylogeny -- i.e., there is no MCMC sampling of character correlation parameters.
+In short, one can obtain an estimate of $\boldsymbol{\rho}$, $\widehat{\boldsymbol{\rho}}$, from characters scored in many individuals of a single species, and then assume this estimate to be true and constant across the phylogeny -- i.e., there is no MCMC sampling of character correlation parameters.
 
 Depending on the dimensions of $\widehat{\boldsymbol{\rho}}$, however, it can become unwieldly: it may become nearly singular, its determinant approaching 0, and its inverse blowing up.
 (Down the line, we obviously cannot compute $f(\mathbf{M} | \boldsymbol{V}, \boldsymbol{y_0})$!)
 Here, we can borrow a technique often referred to as ``regularization'': we can ``shrink'' $\widehat{\boldsymbol{\rho}}$ towards the identity matrix $\boldsymbol{I}$ -- which represents the correlation matrix of a data set where characters are uncorrelated -- and obtain what we call a ridge estimator of $\boldsymbol{\rho}$, $\boldsymbol{\rho}^*$.
-Doing so effectively adds some values to the off-diagonals of the correlation matrix, making it better conditioned; the extent to which we ``shrink`` $\widehat{\boldsymbol{\rho}}$ towards the identity matrix is captured in a tuning (``shrinkage'') parameter, $\delta$.
+Doing so effectively shrinks the off-diagonals of the correlation matrix, making it better conditioned; the extent to which we ``shrink`` $\widehat{\boldsymbol{\rho}}$ towards the identity matrix is captured in a tuning (``shrinkage'') parameter, $\delta$.
 (As you will see later in this tutorial, we will have to specify $\delta$ to run one of our inference analyses.)
 The more uncertain we are about character correlations, because we have way too many characters for way too few species, say, the larger $\delta$ should be.
 At any rate, we will not have to worry too much about the details of how to obtain $\delta$.
@@ -228,7 +228,7 @@ these are \texttt{sampled-ancestors} and \texttt{morph-models}.
 The first implements speciation and fossilization models (for evaluating the probability of phylogenies themselves), and the second implements models for the evolution of discrete morphological characters.
 These packages have a dedicated tutorial (here \textcolor{red}{[https://taming-the-beast.org/tutorials/Total-Evidence-Tutorial/]}) and will not be discussed further in the present exercise.
 
-\subsection{Preparing the data}
+\subsection{The data}
 
 The data sets used in this tutorial include three types of data -- molecular, discrete morphology, continuous morphology -- scored fo up to 27 Carnivore species (11 of which are extinct and 16 of which are extant).
 
@@ -240,29 +240,53 @@ The same cranium landmarks have also been scored in 21 \textit{Vulpes vulpes} (o
 This intraspecific data will be used in the analyses the bypasses the estimation of character correlations ($\boldsymbol{\rho}$), and can be found in attached file \textcolor{red}{\texttt{vulpes\_continuous\_data.txt} [Rong: there is a typo in the name of the file, which I corrected in the text here]}.
 
 \subsubsection{Discrete characters}
-12 species of interest have discrete morphological characters that describe their basicranial, dental, postcranial anatomical features (carnivora\_discrete\_27.nex) \citep{barrett21}. There are 183 features in total and the number of character states ranges from 0 to 3. 
+In addition to continuous characters, our data set includes discrete morphological characters, scored in 12 of the carnivoran species.
+These discrete morphological characters describe these species' basicranial, dental, postcranial anatomical features (\texttt{carnivora\_discrete\_27.nex}) \citep{barrett21}.
+There are 183 characters in total and the number of character states ranges from 0 to 3. 
 
 \subsubsection{Molecular sequences}
-The molecular sequences of 12 mitochondrial genes for 14 species of interest are collected from NCBI database and are further were concatenated, aligned using MAFFT (carnivora\_dna\_27.fasta).
+Finally, we will use molecular sequences of 12 mitochondrial genes obtained for 14 carnivoran species on NCBI.
+These sequences have been aligned and concatenated (\texttt{carnivora\_dna\_27.fasta}).
 
+\section{Bayesian phylogenetic inference using multiple continuous morphological characters (and more!)}
 
-\section{Practical  Part \uppercase\expandafter{\romannumeral 3}: Parameter and State inference under Brownian motion model}
+\textcolor{orange}{
+The following two sections will walk you through the required steps for setting up a couple of different analyses.
+The first shall carry out Bayesian inference of divergence times using continuous morphology only; the main player here is the Brownian model implemented in the \texttt{contraband} package.
+In the second analysis we will set up an integrative model with components for each type of data (described above) -- this will be a full-blown total-evidence dating analysis with all the data we have.
+}
+
+\textcolor{orange}{Like in other tutorials, we will use BEAUti2 as a tool for specifying BEAST2 .XML files for running our analyses.}
+
+\subsection{Phylogenetic inference with Brownian motion}
 
 \subsubsection{Loading the Carnivoran Continuous data}\label{load-continuous-data}
 
-The continuous characters  can be found in the \emph{data} folder named \emph{carnivora\_continuous\_27.nex}. It can be either drag and dropped into BEAUti "Partitions" panel or added using BEAUti’s menu system via \emph{File \textgreater{}\textgreater{} Load Continuous Data}. Once the character are loaded successfully into BEAUTi, the panel will show
+We start by opening BEAUti2 and loading the continuous morphology data available for our carnivoran species.
+This data can be found in \texttt{data/carnivora\_continuous\_27.nex}.
+You can then either drag and drop that file into BEAUti2's ``Partitions'' panel, or use the system's drop-down menu and do File > Load Continuous Data.
+\textcolor{red}{Once the data is loaded successfully into BEAUTi 2, you should be able to see it in the updated ``Partitions'' panel, as shown in figure [reference MISSING figure here].}
 
+\subsubsection{Get the fossil ages (tip dates)}\label{parse-fosill-age}
 
-\subsubsection{Get the fossil ages (Tip Dates)}\label{parse-fosill-age}
-Since the data set have fossil species, we will need to open the "Tip Dates" panel and then select the "Use tip dates" checkbox to specify the fossil ages. This can be done in multiple ways. In our case, we can obtain the date information from the species names.  We can tell BEAUti  to use these by clicking the \emph{Auto-configure} button. The fossil ages appear following the second underscore "\_" in the species name. To extract these times, select "use everything", then select  "after last"  from the drop-down box to the right,  and input "\_" (without the quotes) in the text box immediately to the right, as shown in the figure below \autoref{fig:example2}. Clicking "Ok" should now populate the table with the fossil ages extracted from the species names.
+Some of the species (i.e., terminal nodes, or ``tips'') in our tree are extinct and we will assume their ages are known (from dating their fossils) without error.
+How to relax this assumption appropriately is an active area of research that is outside the scope of this tutorial.
+
+In order to set the age of these tips, open the ``Tip Dates'' panel and check ``Use tip dates''.
+Inputting tip dates can be done in multiple ways, but in our case, fossil ages are provided as part of each species name, after the second underscore ``\texttt{\_}''.
+Conveniently, BEAUti2 can deal with those if we click the ``Auto-configure'' button.
+Select ``use everything'', then select ``after last'' from the drop-down box to the right, and input ``\texttt{\_}'' (without quotes) in the text box immediately to the right (Fig. \autoref{fig:example2}).
+Clicking ``Ok'' should now populate the table with the fossil ages extracted from the species names.
+
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.5\textwidth]{figures/BMParseDates.png}
-    \caption{Guess sampling times.}
+    \caption{Reading fossil ages (heights) as tip sampling dates.}
     \label{fig:example2}
 \end{figure}
 
-In the populated table, the two columns \textbf{Date}  and \textbf{Height}  should now have values between 0.0 and  35.55 in million years \autoref{fig:example3}.
+In the populated table (Fig. \autoref{fig:example3}), columns \textbf{Date} and \textbf{Age/Height} should now have values between 0.0 and 35.55 million years.
+Note how living species have ages of 0.0 and extinct species have ages > 0.0.
 
 \begin{figure}[!htbp]
     \centering
@@ -271,8 +295,14 @@ In the populated table, the two columns \textbf{Date}  and \textbf{Height}  shou
     \label{fig:example3}
 \end{figure}
 
-\subsubsection{Set the Brownian motion Model}
-As is introduced above, the parameters under the Brownian motion model include trait evolutionary rate (Sigmasq), trait correlations (Correlation) and ancestral states at the root (Root Values). Here we assume that all characters share one evolutionary rate. Therefore, we put a tick in the box in front of the "One Rate Only".
+\subsubsection{Seting up the Brownian motion model}
+
+As elaborated in the background section above, there are a few key Brownian motion model parameters that concern us.
+Namely:\begin{enumerate}\item the character values at the root of the tree, $\boldsymbol{y_0}$, \item the character correlations, $\boldsymbol{\rho}$, and \item the character-specific evolutionary rates, $\boldsymbol{r}$.\end{enumerate}
+
+We want to estimate all these parameters (so check all the ``estimate'' boxes), but for simplicity, we will assume that all characters are evolving at the same rate.
+Therefore, we want to check the ``One Rate Only'' box.
+Parameter values at the start of the MCMC chain can be specified in the text boxes next to their corresponding parameters names; these should not matter for analysis convergence, and we will just use arbitrary, round values (Fig. \ref{fig:example4}).
 
 \begin{figure}[!htbp]
     \centering
@@ -282,8 +312,11 @@ As is introduced above, the parameters under the Brownian motion model include t
 \end{figure}
 
 
-\subsubsection{Set the Clock model}\label{bm-clock-model}
-We assume the relative branch-specific rates are independently distributed and follow a LogNormal distribution with a fixed mean of 1. Therefore, we specify a relaxed clock model by selecting "Optimised Relaxed Clock" in the drop-down menu, where the mean clock rate represents the global morphological clock rate that will be estimated by default. The detailed description of the model can be found in \cite{douglas2021}.
+\subsubsection{Setting up the morphological clock model}\label{bm-clock-model}
+
+The morphological clock model we will use in this analysis is the well known uncorrelated log-normal clock \cite{drummond06}, under which each branch of the species tree is assumed to have its own relative evolutionary rate, with rates being identically and independently distributed.
+
+\st{We assume the relative branch-specific rates are independently distributed and follow a LogNormal distribution with a fixed mean of 1. Therefore, we specify a relaxed clock model by selecting "Optimised Relaxed Clock" in the drop-down menu, where the mean clock rate represents the global morphological clock rate that will be estimated by default. The detailed description of the model can be found in} % \cite{douglas2021}.
 
 \begin{figure}[!htbp]
     \centering
