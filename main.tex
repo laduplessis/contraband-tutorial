@@ -49,13 +49,13 @@ Total-evidence dating and trait-evolution evolutionary inference using phylogene
 \section{Background}\label{background}
 
 % \begin{quote}
-\noindent \textbf{Bird's-eye view}. This tutorial shows how to use the \texttt{contraband} package in \texttt{BEAST 2} to model continuous trait evolution along a phylogeny with Brownian motion.
+\noindent \textbf{Bird's-eye view}. This tutorial shows how to use the \texttt{contraband} package in \texttt{BEAST2} to model continuous trait evolution along a phylogeny with Brownian motion.
 Unlike methods that assume a ``known'', fixed tree, \texttt{contraband} lets you estimate the tempo and mode of trait evolution simultaneously with both species relationships and divergence times.
 % \end{quote}
 
 \subsection{What is \texttt{contraband} for}
 
-In this tutorial, we will walk you through running a simple analysis with the \texttt{contraband} (\textbf{con}tinuous \textbf{tra}its \textbf{b}rowni\textbf{an} mo\textbf{d}els) \texttt{BEAST 2} package.
+In this tutorial, we will walk you through running a simple analysis with the \texttt{contraband} (\textbf{con}tinuous \textbf{tra}its \textbf{b}rowni\textbf{an} mo\textbf{d}els) \texttt{BEAST2} package.
 As the name suggests, \texttt{contraband} implements Brownian motion (BM) models for the evolution of continuous traits on a phylogeny.
 
 To understand how these models can be useful to evolutionary biologists, let's put our X-ray goggles on and look at the core of the \texttt{contraband} package: the probability density function (pdf) of the multivariate Brownian motion model -- the same pdf used for a multivariate normal distribution:
@@ -114,7 +114,7 @@ f(\mathbf{M} | \boldsymbol{V}, \boldsymbol{y_0})  = f(\mathbf{M} | \Phi, \boldsy
 As mentioned above, $\mathbf{M}$ contains our continuous-character data, it is a matrix whose dimensions are the number of species $\times$ the number of characters.
 On the right-hand side of this equation, you should further recognize some of the terms that have direct counterparts in models used for molecular evolution, e.g., those involved in the morphological clock model.
 These are the morphological global clock rate ($c_m$) and relative branch rates ($\boldsymbol{b}_m$).
-Other parameters, however, are unique to multivariate Brownian models, like the character values from all characters at the root of the tree ($\boldsymbol{y_0}$), a vector containing all relative character-specific evolutionary rates ($\boldsymbol{r}$), and the between-character correlation matrix ($\boldsymbol{\rho}$).
+Other parameters, however, are unique to multivariate Brownian models, like the character values from all characters ($\boldsymbol{y_0}$) at the root of the tree ($\Phi$), a vector containing all relative character-specific evolutionary rates ($\boldsymbol{r}$), and the between-character correlation matrix ($\boldsymbol{\rho}$).
 All of these parameters can in principle be estimated with MCMC, but the accuracy of and uncertainty about our estimates will be a function of our data set size, which include the number of traits and of species (more details can be found in \cite{zhang24}), as well as analysis running times.
 
 Among the most challenging parameters to estimate is $\boldsymbol{\rho}$.
@@ -156,7 +156,7 @@ In what follows, we will guide you through the explicit steps -- including insta
 
 \section{Programs used in this exercise}\label{programs-used-in-this-exercise}
 %
-\subsubsection{BEAST2 - Bayesian Evolutionary Analysis Sampling Trees2}
+\subsubsection*{BEAST2 - Bayesian Evolutionary Analysis Sampling Trees2}
 %
 BEAST2 (\url{http://www.beast2.org}) is a free software package for
 Bayesian evolutionary analysis of molecular sequences using MCMC and
@@ -164,27 +164,27 @@ strictly oriented toward inference using rooted, time-measured
 phylogenetic trees. This tutorial is written for BEAST v2.7.7 \citep{bouckaert2019beast}.
 
 
-\subsubsection{BEAUti2 - Bayesian Evolutionary Analysis Utility}
+\subsubsection*{BEAUti2 - Bayesian Evolutionary Analysis Utility}
 
 BEAUti2 is the successor of BEAUti, a graphical user interface tool that makes it easy to generate BEAST2 XML configuration files (these files are necessary to specify and run MCMC analyses).
 It is provided as a part of the BEAST2 package so you do not need to install it separately.
 Both BEAST2 and BEAUti2 are written in Java, meaning that these programs can not only be integrated at their codebase level, but that they are also cross-platform: the exact same code runs on all platforms.
 Although the screenshots used in this tutorial have been taken on a Mac OS X computer, both BEAST2 and BEAUti2 will have the same layout and functionality under other operating systems like Windows and Linux.
 
-\subsubsection{TreeAnnotator}\label{treeannotator}
+\subsubsection*{TreeAnnotator}\label{treeannotator}
 
 TreeAnnotator is a program we will use to produce a summary tree from a posterior sample of trees obtained via MCMC.
 We will also use this program to summarize and visualize the posterior estimates of other tree-related parameters (e.g., node heights).
 TreeAnnotator is also provided as a part of the BEAST2 package so you do not need to install it separately.
 
-\subsubsection{Tracer}\label{tracer}
+\subsubsection*{Tracer}\label{tracer}
 
 Tracer (\url{http://tree.bio.ed.ac.uk/software/tracer}) is used to summarize the posterior estimates of the various parameters sampled via MCMC.
 This program can be used for visual inspection of MCMC chains and to assess their convergence.
 Tracer makes it easy to calculate parameter median estimates, their 95\% highest posterior density (95\%-HPD) intervals, their effective sample sizes (ESS), and their correlation with other parameters.
 % Conventionally, ESSs of at least 200 for are interpreted as It can also be used to investigate potential parameter correlations. We will be using Tracer v1.7.2.
 
-\subsubsection{FigTree}\label{figtree}
+\subsubsection*{FigTree}\label{figtree}
 
 The last program we will use is FigTree (\url{http://tree.bio.ed.ac.uk/software/figtree}).
 FigTree was designed so that users can easily visualize trees and draw publication-quality figures.
@@ -196,8 +196,7 @@ We will use FigTree v1.4.4.
 \subsection{Installing dependencies}
 
 Total-evidence dating of phylogenies is a complex task that requires a series of models, a few of which are implemented in their own BEAST2 packages.
-The main package for this tutorial is called \texttt{contraband} and it implements Brownian models for the evolution of multiple characters on phylogenetic trees.
-
+The main package for this tutorial is called \texttt{contraband} and it implements Brownian motion models for the evolution of multiple characters on phylogenetic trees.
 % In this tutorial we will estimate evolutionary rates,  trait correlations, ancestral states and phylogenetic trees using the Brownian motion implemented in BEAST2, contraband.
 
 % The aim is to:
@@ -212,41 +211,47 @@ The main package for this tutorial is called \texttt{contraband} and it implemen
 %   Learn how to read the output of a ``contraband" analysis
 % \end{itemize}
 
-In order to install \texttt{contraband}, we have to download it using the BEAUTi \textcolor{red}{[2?]} package manager.
-Open BEAUti2, go to \emph{File \textgreater{}\textgreater{} Manage Packages}, and click on the \texttt{contraband} link (Figure 1).
-The package will become available in BEAUti2 once you close and restart the program.
+%In order to install \texttt{contraband}, we have to download it using the BEAUTi \textcolor{red}{[2?]} package manager.
+%Open BEAUti2, go to \emph{File \textgreater{}\textgreater{} Manage Packages}, and click on the \texttt{contraband} link (Figure 1).
+%The package will become available in BEAUti2 once you close and restart the program.
+In order to install \texttt{contraband}, we have to download it using the BEAST2 package manager.
+Open BEAUti2, go to \emph{File \textgreater{}\textgreater{} Manage Packages}, and click on the \texttt{contraband} link and then clicking \emph{Install/Upgrade} (\autoref{fig:example1}).
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.5\textwidth]{figures/contrabandDownload.png}
-    \caption{Download the contraband package.}
+    \caption{Downloading the contraband package.}
     \label{fig:example1}
 \end{figure}
 
 This tutorial will also make use of a few other packages;
 these are \texttt{sampled-ancestors} and \texttt{morph-models}.
 The first implements speciation and fossilization models (for evaluating the probability of phylogenies themselves), and the second implements models for the evolution of discrete morphological characters.
-These packages have a dedicated tutorial (here \textcolor{red}{[https://taming-the-beast.org/tutorials/Total-Evidence-Tutorial/]}) and will not be discussed further in the present exercise.
+%These packages have a dedicated tutorial (here \textcolor{red}{[https://taming-the-beast.org/tutorials/Total-Evidence-Tutorial/]}) and will not be discussed further in the present exercise.
+The SA and MM packages have two dedicated tutorials on the Taming the BEAST website (\href{https://taming-the-beast.org/tutorials/FBD-tutorial/}{Divergence Time Estimation tutorial} and \href{https://taming-the-beast.org/tutorials/Total-Evidence-Tutorial/}{Total Evidence tutorial}) and will not be discussed further in the present exercise.
+The newly installed packages will become available in BEAUti2 once you close and restart the program.
 
 \subsection{The data}
 
-The data sets used in this tutorial include three types of data -- molecular, discrete morphology, continuous morphology -- scored fo up to 27 Carnivore species (11 of which are extinct and 16 of which are extant).
+The data sets used in this tutorial include three types of data -- molecular, discrete morphology and continuous morphology -- scored for up to 27 Carnivore species (11 of which are extinct and 16 of which are extant).
 
 \subsubsection{Continuous characters}
-Our TED analysis will leverage a published geometric-morphometric data set consisting of 29 three-dimensional (3D) cranium landmarks \citep{alvarez19}, each dimension of which will be treated as a separate continuous characters (i.e., we will have a total of 87 continuous characters).
+Our TED analysis will leverage a published geometric-morphometric data set consisting of 29 three-dimensional (3D) cranium landmarks \citep{alvarez19}, each dimension of which will be treated as a separate continuous character (i.e., we will have a total of 87 continuous characters).
 This data can be found in file \texttt{carnivora\_continuous\_27.nex} attached to this tutorial.
 
 The same cranium landmarks have also been scored in 21 \textit{Vulpes vulpes} (one of the focal carnivore species) individuals.
-This intraspecific data will be used in the analyses the bypasses the estimation of character correlations ($\boldsymbol{\rho}$), and can be found in attached file \texttt{vulpes\_continuous\_data.txt}.
+This intraspecific data will be used in the analyses to bypass the estimation of character correlations ($\boldsymbol{\rho}$), and can be found in the attached file \texttt{vulpes\_continuous\_data.txt}.
 
 \subsubsection{Discrete characters}
-In addition to continuous characters, our data set includes discrete morphological characters, scored in 12 of the carnivoran species.
-These discrete morphological characters describe these species' basicranial, dental, postcranial anatomical features (\texttt{carnivora\_discrete\_27.nex}) \citep{barrett21}.
-There are 183 characters in total and the number of character states ranges from 0 to 3. 
+%In addition to continuous characters, our data set includes discrete morphological characters, scored in 12 of the carnivoran species.
+%These discrete morphological characters describe these species' basicranial, dental, postcranial anatomical features (\texttt{carnivora\_discrete\_27.nex}) \citep{barrett21}.
+%There are 183 characters in total and the number of character states ranges from 0 to 3. 
+12 species of interest have discrete morphological characters that describe their basicranial, dental and postcranial anatomical features (\texttt{carnivora\_discrete\_27.nex}) \citep{barrett21}. There are 183 features in total and the number of character states ranges from 0 to 3. 
 
 \subsubsection{Molecular sequences}
-Finally, we will use molecular sequences of 12 mitochondrial genes obtained for 14 carnivoran species on NCBI.
-These sequences have been aligned and concatenated (\texttt{carnivora\_dna\_27.fasta}).
+%Finally, we will use molecular sequences of 12 mitochondrial genes obtained for 14 carnivoran species on NCBI.
+%These sequences have been aligned and concatenated (\texttt{carnivora\_dna\_27.fasta}).
+The molecular sequences of 12 mitochondrial genes for 14 species of interest were collected from the NCBI database, concatenated and aligned using MAFFT (\texttt{carnivora\_dna\_27.fasta}).
 
 \section{Bayesian phylogenetic inference using multiple continuous morphological characters (and more!)}
 
@@ -260,33 +265,39 @@ In the second analysis we will set up an integrative model with components for e
 
 \subsection{Phylogenetic inference with Brownian motion}
 
+
+
+%We start by opening BEAUti2 and loading the continuous morphology data available for our carnivoran species.
+%This data can be found in \texttt{data/carnivora\_continuous\_27.nex}.
+%You can then either drag and drop that file into BEAUti2's ``Partitions'' panel, or use the system's drop-down menu and do File > Load Continuous Data.
+%\textcolor{red}{Once the data is loaded successfully into BEAUTi 2, you should be able to see it in the updated ``Partitions'' panel, as shown in figure [reference MISSING figure here].}
+\subsection{Setting up the analysis in BEAUti}
 \subsubsection{Loading the Carnivoran Continuous data}\label{load-continuous-data}
 
-We start by opening BEAUti2 and loading the continuous morphology data available for our carnivoran species.
-This data can be found in \texttt{data/carnivora\_continuous\_27.nex}.
-You can then either drag and drop that file into BEAUti2's ``Partitions'' panel, or use the system's drop-down menu and do File > Load Continuous Data.
-\textcolor{red}{Once the data is loaded successfully into BEAUTi 2, you should be able to see it in the updated ``Partitions'' panel, as shown in figure [reference MISSING figure here].}
+The continuous characters  can be found in the \texttt{data} folder named \texttt{carnivora\_continuous\_27.nex}. It can be either dragged and dropped into BEAUti "Partitions" panel or added using BEAUti’s menu system via \emph{File \textgreater{}\textgreater{} Load Continuous Data}. Once the character are loaded successfully into BEAUTi, the panel will show
 
-\subsubsection{Get the fossil ages (tip dates)}\label{parse-fosill-age}
+%\subsubsection{Get the fossil ages (tip dates)}\label{parse-fosill-age}
+%
+%Some of the species (i.e., terminal nodes, or ``tips'') in our tree are extinct and we will assume their ages are known (from dating their fossils) without error.
+%How to relax this assumption appropriately is an active area of research that is outside the scope of this tutorial.
+%
+%In order to set the age of these tips, open the ``Tip Dates'' panel and check ``Use tip dates''.
+%Inputting tip dates can be done in multiple ways, but in our case, fossil ages are provided as part of each species name, after the second underscore ``\texttt{\_}''.
+%Conveniently, BEAUti2 can deal with those if we click the ``Auto-configure'' button.
+%Select ``use everything'', then select ``after last'' from the drop-down box to the right, and input ``\texttt{\_}'' (without quotes) in the text box immediately to the right (Fig. \autoref{fig:example2}).
+%Clicking ``Ok'' should now populate the table with the fossil ages extracted from the species names.
 
-Some of the species (i.e., terminal nodes, or ``tips'') in our tree are extinct and we will assume their ages are known (from dating their fossils) without error.
-How to relax this assumption appropriately is an active area of research that is outside the scope of this tutorial.
-
-In order to set the age of these tips, open the ``Tip Dates'' panel and check ``Use tip dates''.
-Inputting tip dates can be done in multiple ways, but in our case, fossil ages are provided as part of each species name, after the second underscore ``\texttt{\_}''.
-Conveniently, BEAUti2 can deal with those if we click the ``Auto-configure'' button.
-Select ``use everything'', then select ``after last'' from the drop-down box to the right, and input ``\texttt{\_}'' (without quotes) in the text box immediately to the right (Fig. \autoref{fig:example2}).
-Clicking ``Ok'' should now populate the table with the fossil ages extracted from the species names.
+\subsubsection{Setting the fossil ages (Tip Dates)}\label{parse-fosill-age}
+Since the data set contains fossil species, we will need to open the "Tip Dates" panel and then select the "Use tip dates" checkbox to specify the fossil ages. This can be done in multiple ways. In our case, we can obtain the date information from the species names.  We can tell BEAUti  to use these by clicking the \emph{Auto-configure} button. The fossil ages appear following the second underscore "\_" in the species name. To extract these times, select "use everything", then select  "after last"  from the drop-down box to the right,  and input "\_" (without the quotes) in the text box immediately to the right, as shown in the figure below \autoref{fig:example2}. Clicking "OK" should now populate the table with the fossil ages extracted from the species names.
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.5\textwidth]{figures/BMParseDates.png}
-    \caption{Reading fossil ages (heights) as tip sampling dates.}
+   \caption{Guessing sampling times.}
     \label{fig:example2}
 \end{figure}
 
-In the populated table (Fig. \autoref{fig:example3}), columns \textbf{Date} and \textbf{Age/Height} should now have values between 0.0 and 35.55 million years.
-Note how living species have ages of 0.0 and extinct species have ages > 0.0.
+In the populated table, the two columns \textbf{Date}  and \textbf{Height}  should now have values between 0.0 and 35.55 in million years (\autoref{fig:example3}).
 
 \begin{figure}[!htbp]
     \centering
@@ -295,7 +306,8 @@ Note how living species have ages of 0.0 and extinct species have ages > 0.0.
     \label{fig:example3}
 \end{figure}
 
-\subsubsection{Seting up the Brownian motion model}
+\subsubsection{Setting the Brownian motion Model}
+As introduced above, the parameters under the Brownian motion model include trait evolutionary rate (Sigmasq), trait correlations (Correlation) and ancestral states at the root (Root Values). Here we assume that all characters share one evolutionary rate. Therefore, we put a tick in the box in front of the "One Rate Only".
 
 As elaborated in the background section above, there are a few key Brownian motion model parameters that concern us.
 Namely:\begin{enumerate}\item the character values at the root of the tree, $\boldsymbol{y_0}$, \item the character correlations, $\boldsymbol{\rho}$, and \item the character-specific evolutionary rates, $\boldsymbol{r}$.\end{enumerate}
@@ -303,6 +315,8 @@ Namely:\begin{enumerate}\item the character values at the root of the tree, $\bo
 We want to estimate all these parameters (so check all the ``estimate'' boxes), but for simplicity, we will assume that all characters are evolving at the same rate.
 Therefore, we want to check the ``One Rate Only'' box.
 Parameter values at the start of the MCMC chain can be specified in the text boxes next to their corresponding parameters names; these should not matter for analysis convergence, and we will just use arbitrary, round values (Fig. \ref{fig:example4}).
+
+
 
 \begin{figure}[!htbp]
     \centering
@@ -312,7 +326,7 @@ Parameter values at the start of the MCMC chain can be specified in the text box
 \end{figure}
 
 
-\subsubsection{Setting up the morphological clock model}\label{bm-clock-model}
+\subsubsection{Setting the Clock model}\label{bm-clock-model}
 
 The morphological clock model we will use in this analysis is the well known uncorrelated log-normal clock \cite{drummond06}, under which each branch of the species tree is assumed to have its own relative evolutionary rate, with rates being identically and independently distributed.
 
@@ -321,168 +335,229 @@ The morphological clock model we will use in this analysis is the well known unc
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.700000\textwidth]{figures/BMClockModel.png}
-    \caption{Set the initial clock rate.}
+    \caption{Setting the initial clock rate.}
     \label{fig:example5}
 \end{figure}
 
-\subsubsection{Specify the priors}
-In the ''Priors" panel, we select "Fossilized Birth Death Model" \citep{gavryushkina2014} as the tree prior and leave the rest of the parameters having their default prior distributions.
+\subsubsection{Specifying the priors}
+% FBD model is from Heath et al 2014, BEAST implementation from Gavryushkina et al 2014! 
+In the ''Priors" panel, we select "Fossilized Birth Death Model" \citep{heath2014, gavryushkina2014} as the tree prior and leave the rest of the parameters at their default prior distributions.
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.700000\textwidth]{figures/BMPriors.png}
-    \caption{Set the tree model and priors on parameters.}
+    \caption{Setting the tree model and priors on parameters.}
     \label{fig:example6}
 \end{figure}
 
 
-\subsubsection{Specify the MCMC chain length (MCMC)}\label{specify-the-mcmc-chain-length-mcmc}
+\subsubsection{Specifying the MCMC chain length (MCMC)}\label{specify-the-mcmc-chain-length-mcmc}
 %
 Here we can set the length of the MCMC chain and after how many
 iterations the parameter and trees a logged. For this dataset, 2 million
 iterations should be sufficient. In order to have enough samples but not
 create too large files, we can set the logEvery to 2000, so we have 1001
-samples overall. Next, we have to save the \lstinline!*.xml! file under
+samples overall. Next, we have to save the \texttt{*.xml} file under
 \emph{File \textgreater{}\textgreater{} Save as}.
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.700000\textwidth]{figures/BMMCMC.png}
-    \caption{save the *.xml.}
+    \caption{saving the \texttt{*.xml} file.}
     \label{fig:example7}
 \end{figure}
 
-\subsubsection{Run the Analysis using BEAST2}\label{run-the-analysis-using-beast2}
-%
-Run the \lstinline!*.xml! using BEAST2 or use finished runs from the
-\emph{precooked-runs} folder. The analysis should take about 6 to 7
+
+\subsection{Running the Analysis using BEAST2}\label{run-the-analysis-using-beast2}
+Run the \texttt{*.xml} file using BEAST2. The analysis should take about 6 to 7
 minutes.
-%
 
-\subsubsection{Post analysis}
+\subsection{Analysing the results}
+For this section either use the output files from your own analysis or use finished runs from the
+\emph{precooked-runs} folder. \textcolor{red}{\textbf{ Precooked runs don't exist!}}
 
-\begin{itemize}
-\item Analyse the log file using Tracer
-\\
-First, we can open the \lstinline!*.log! file in tracer to check if the
+Follow the steps below:
+
+\subsubsection{Analysing the log file using Tracer}
+
+First, we can open the \texttt{*.log} file in tracer to check if the
 MCMC has converged. The ESS value should be above 200 for almost all
-values and especially for the posterior estimates (\autoref{fig:bm_res1}).
-
+parameters and especially for the posterior estimates (\autoref{fig:bm_res1}). This is clearly not the case here and this analysis should be run for much longer to reach convergence. 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.700000\textwidth]{figures/results/BM_posterior.png}
-    \caption{Check if the posterior converged.}
+    \caption{Checking if the chain converged.}
     \label{fig:bm_res1}
 \end{figure}
 
-\item  The estimated evolutionary rate  (\autoref{fig:bm_res2})
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=0.700000\textwidth]{figures/results/BM_evo_rate.png}
-    \caption{Evolutionary rate shared by 87 characters.}
-    \label{fig:bm_res2}
-\end{figure}
+Next, examine the posterior estimates for the following parameters:
+\begin{itemize}
+	\item  The estimated evolutionary rate  (\autoref{fig:bm_res2}),
+	\begin{figure}[!htbp]
+	    \centering
+	    \includegraphics[width=0.700000\textwidth]{figures/results/BM_evo_rate.png}
+	    \caption{Evolutionary rate shared by 87 characters.}
+	    \label{fig:bm_res2}
+	\end{figure}
 
-\item The estimated character correlations (\autoref{fig:bm_res3})
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=0.700000\textwidth]{figures/results/BM_covValues.png}
-    \caption{Character correlations among 87 characters.}
-    \label{fig:bm_res3}
-\end{figure}
+	\item The estimated character correlations (\autoref{fig:bm_res3}),
+	\begin{figure}[!htbp]
+	    \centering
+	    \includegraphics[width=0.700000\textwidth]{figures/results/BM_covValues.png}
+	    \caption{Character correlations among 87 characters.}
+	    \label{fig:bm_res3}
+	\end{figure}
 
-\item The estimated ancestral states at the root (\autoref{fig:bm_res4})
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=0.700000\textwidth]{figures/results/BM_rootValues.png}
-    \caption{87 trait values at the root of the tree.}
-    \label{fig:bm_res4}
-\end{figure}
+	\item The estimated ancestral states at the root (\autoref{fig:bm_res4}),
+	\begin{figure}[!htbp]
+	    \centering
+	    \includegraphics[width=0.700000\textwidth]{figures/results/BM_rootValues.png}
+	    \caption{87 trait values at the root of the tree.}
+	    \label{fig:bm_res4}
+	\end{figure}
 
-\item The inferred morphological clock model (\autoref{fig:bm_res5})
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=0.700000\textwidth]{figures/results/BM_clock_sigma.png}
-    \caption{Compare the inferrred migration rates.}
-    \label{fig:bm_res5}
-\end{figure}
-
-\item Make the summary tree using TreeAnnotator
-\\
+	\item The inferred morphological clock model (\autoref{fig:bm_res5}).
+	\begin{figure}[!htbp]
+	    \centering
+	    \includegraphics[width=0.700000\textwidth]{figures/results/BM_clock_sigma.png}
+	    \caption{Comparing the inferrred migration rates.}
+	    \label{fig:bm_res5}
+	\end{figure}
+\end{itemize}
+%%\begin{itemize}
+%%\item Analyse the log file using Tracer
+%%\\
+%%First, we can open the \lstinline!*.log! file in tracer to check if the
+%%MCMC has converged. The ESS value should be above 200 for almost all
+%%values and especially for the posterior estimates (\autoref{fig:bm_res1}).
+%%
+%%\begin{figure}[!htbp]
+%%    \centering
+%%    \includegraphics[width=0.700000\textwidth]{figures/results/BM_posterior.png}
+%%    \caption{Check if the posterior converged.}
+%%    \label{fig:bm_res1}
+%%\end{figure}
+%%
+%%\item  The estimated evolutionary rate  (\autoref{fig:bm_res2})
+%%\begin{figure}[!htbp]
+%%    \centering
+%%    \includegraphics[width=0.700000\textwidth]{figures/results/BM_evo_rate.png}
+%%    \caption{Evolutionary rate shared by 87 characters.}
+%%    \label{fig:bm_res2}
+%%\end{figure}
+%%
+%%\item The estimated character correlations (\autoref{fig:bm_res3})
+%%\begin{figure}[!htbp]
+%%    \centering
+%%    \includegraphics[width=0.700000\textwidth]{figures/results/BM_covValues.png}
+%%    \caption{Character correlations among 87 characters.}
+%%    \label{fig:bm_res3}
+%%\end{figure}
+%%
+%%\item The estimated ancestral states at the root (\autoref{fig:bm_res4})
+%%\begin{figure}[!htbp]
+%%    \centering
+%%    \includegraphics[width=0.700000\textwidth]{figures/results/BM_rootValues.png}
+%%    \caption{87 trait values at the root of the tree.}
+%%    \label{fig:bm_res4}
+%%\end{figure}
+%%
+%%\item The inferred morphological clock model (\autoref{fig:bm_res5})
+%%\begin{figure}[!htbp]
+%%    \centering
+%%    \includegraphics[width=0.700000\textwidth]{figures/results/BM_clock_sigma.png}
+%%    \caption{Compare the inferrred migration rates.}
+%%    \label{fig:bm_res5}
+%%\end{figure}
+%\clearpage
+%
+\subsubsection{Constructing the summary tree using TreeAnnotator}
 Open \textbf{TreeAnnotator} and then set the options including \textbf{Burnin percentage}, \textbf{Target tree type},  \textbf{Node heights}, \textbf{Input Tree File} and the \textbf{Output File}.
 Use the logged trees in the file  \lstinline!carnivora_continuous_27_tree_bm.trees! as \textbf{Input Tree File}. Name output file \lstinline!carnivora_continuous_27_bm_mcc.tree!.
+
+Use the logged trees in the file  
+\\
+\texttt{carnivora\_continuous\_27\_tree\_bm.trees} as \textbf{Input Tree File}. Name output file 
+\\
+\texttt{carnivora\_continuous\_27\_bm\_mcc.tree}.
+
 After clicking \textbf{Run} the program should summarize the trees.
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.700000\textwidth]{figures/results/BM_MCC_tree.png}
-    \caption{Summarised MCC tree of logged trees under Brownian motion model.}
+    \caption{Summarised MCC tree of logged trees under the Brownian motion model.}
     \label{fig:bm_res6}
 \end{figure}
-\end{itemize}
 
 
-\section{Practical  Part \uppercase\expandafter{\romannumeral 4}: Parameter and State inference using combined data with Brownian motion model with shrinkage method}
+\section{Practical  Part \uppercase\expandafter{\romannumeral 4}: Parameter and State inference using combined data with the Brownian motion model combined with a shrinkage method}
+
+\subsection{Setting up the analysis in BEAUti}
+
 \subsubsection{Loading the Carnivoran data sets}
-We first load the continuous data and parse the fossil ages as is mentioned in previous sections \ref{load-continuous-data} and \ref{parse-fosill-age}. Then, in the "Partitions" panel, we continue to load the Carnivoran molecular sequences via \emph{File \textgreater{}\textgreater{} Import Alignment}. Finally, we add the discrete characters by \emph{File \textgreater{}\textgreater{} Add Morphological Data}. As is shown in \autoref{fig:example8}, 
+We first load the continuous data and parse the fossil ages as in sections~\ref{load-continuous-data} and~\ref{parse-fosill-age}. Then, in the "Partitions" panel, we also load the Carnivoran molecular sequences via \emph{File \textgreater{}\textgreater{} Import Alignment}. Finally, we add the discrete characters by \emph{File \textgreater{}\textgreater{} Add Morphological Data}. As is shown in \autoref{fig:example8}, 
 
 \begin{figure}
     \centering
     \includegraphics[width=0.700000\textwidth]{figures/DataPartitions.png}
-    \caption{Load continuous characters, molecular sequences and discrete characters.}
+    \caption{Loading continuous characters, molecular sequences and discrete characters.}
     \label{fig:example8}
 \end{figure}
 
 
-\subsubsection{Set the Shrinkage Model}
-In the "Shrinkage Model" panel, we will need to fill in three components of the model. First, the shrinkage parameter is given by a constant value in the box to the right of "Delta". Second, the continuous characters from 21 \textit{Vulpes vulpes} individuals are given in the block of "Population Traits". To be more specific, the trait data should be written in one-line data separated by spaces. In addition, the number of trait is given by "Minordimension" and should be consistent with the dimension of the continuous data in ''Partitions" panel. Third, the added individual trait values are not only used for estimating correlations, but also normalizing the continuous data of the 19 carnivoran species. Therefore, we put a $\checkmark$ in the box in front of "Include Pop Var". 
+%%\subsubsection{Set the Shrinkage Model}
+%%In the "Shrinkage Model" panel, we will need to fill in three components of the model. First, the shrinkage parameter is given by a constant value in the box to the right of "Delta". Second, the continuous characters from 21 \textit{Vulpes vulpes} individuals are given in the block of "Population Traits". To be more specific, the trait data should be written in one-line data separated by spaces. In addition, the number of trait is given by "Minordimension" and should be consistent with the dimension of the continuous data in ''Partitions" panel. Third, the added individual trait values are not only used for estimating correlations, but also normalizing the continuous data of the 19 carnivoran species. Therefore, we put a $\checkmark$ in the box in front of "Include Pop Var". 
+\subsubsection{Setting the Shrinkage Model}
+In the "Shrinkage Model" panel, we will need to fill in three components of the model. First, the shrinkage parameter is given by a constant value in the box to the right of "Delta". Second, the continuous characters from 21 \textit{Vulpes vulpes} individuals are given in the block of "Population Traits". To be more specific, the trait data should be written in one-line data separated by spaces. In addition, the number of traits is given by "Minordimension" and should be consistent with the dimension of the continuous data in the ''Partitions" panel. Third, the added individual trait values are not only used for estimating correlations, but also normalizing the continuous data of the 19 carnivoran species. Therefore, we put a $\checkmark$ in the box in front of "Include Pop Var" (\autoref{fig:example9}). 
+
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.700000\textwidth]{figures/ShrinkageModel.png}
-    \caption{Set the shrinkage model.}
+    \caption{Setting the shrinkage model.}
     \label{fig:example9}
 \end{figure}
 
 
-\subsubsection{Set the Substitution Model}
-In the "Site Model" panel, we assume a HKY+Gamma for nucleotide substitutions by specifying 4 categories \autoref{fig:example1}. In addition, we assume Mk models  \citep{lewis2001} for discrete characters, as is shown in \autoref{fig:example11}.
+\subsubsection{Setting the Substitution Model}
+In the "Site Model" panel, we assume an HKY+Gamma model for nucleotide substitutions by specifying 4 categories under "Gamma Category Count" \autoref{fig:example10}. In addition, we assume Mk models  \citep{lewis2001} for the discrete characters, as is shown in \autoref{fig:example11}.
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.700000\textwidth]{figures/SiteModelDNA.png}
-    \caption{Set site models for molecular sequences and discrete characters.}
+    \caption{Setting site models for molecular sequences and discrete characters.}
     \label{fig:example10}
 \end{figure}
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.700000\textwidth]{figures/SiteModelMk.png}
-    \caption{Set site models for molecular sequences and discrete characters.}
+     \caption{Setting site models for discrete characters.}
     \label{fig:example11}
 \end{figure}
 
 
-\subsubsection{Set the Clock model}
-Similar to what is mentioned in section \autoref{bm-clock-model}, we assume relaxed clock model for each data partition. The specifications are shown in \autoref{fig:example12}.
+\subsubsection{Setting the Clock model}
+Similar to section~\ref{bm-clock-model}, we assume a relaxed clock model for each data partition. The specifications are shown in \autoref{fig:example12}.
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.700000\textwidth]{figures/ClockModel.png}
-    \caption{Set the initial clock models for continuous data, molecular data and discrete data.}
+    \caption{Setting the clock models for continuous data, molecular data and discrete data.}
     \label{fig:example12}
 \end{figure}
 
-\subsubsection{Specify the priors}
+\subsubsection{Specifying the priors}
 
-First, we select ''Fossilized Birth Death Model" from the drop-down menu and set it as the tree prior. Then we also keep the default priors for the rest of the parameters \autoref{fig:example13}.
+First, we select ''Fossilized Birth Death Model" from the drop-down menu and set it as the tree prior. Then we again retain the default priors for the rest of the parameters (\autoref{fig:example13}).
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.700000\textwidth]{figures/Priors.png}
-    \caption{Set up tree model and  the prior distributions.}
+    \caption{Setting up tree model and  the prior distributions.}
     \label{fig:example13}
 \end{figure}
 
-\subsubsection{Specify the MCMC chain length (MCMC)}\label{specify-the-mcmc-chain-length-mcmc}
+\subsubsection{Specifying the MCMC chain length (MCMC)}\label{specify-the-mcmc-chain-length-mcmc}
 %
 Here we can set the length of the MCMC chain and after how many
 iterations the parameter and trees a logged. For this dataset, 2 million
@@ -491,17 +566,20 @@ create too large files, we can set the logEvery to 2000, so we have 1001
 samples overall. Next, we have to save the \lstinline!*.xml! file under
 \emph{File \textgreater{}\textgreater{} Save as}.
 
-\subsubsection{Run the Analysis using BEAST2}\label{run-the-analysis-using-beast2}
+\subsection{Running the Analysis using BEAST2}\label{run-the-analysis-using-beast2}
 %
 Run the \lstinline!*.xml! using BEAST2 or use finished runs from the
 \emph{precooked-runs} folder. The analysis should take about 6 to 7
 minutes.
 %
 
-\subsubsection{Post analysis}
+\subsection{Analysing the results}
+
+For this section either use the output files from your own analysis or use finished runs from the
+\emph{precooked-runs} folder. 
 
 \begin{itemize}
-\item Inferred clock models for continuous data, discrete data and molecular sequences (\autoref{fig:bm_res6} and \autoref{fig:bm_res7})
+\item Examine the posterior estimates for the inferred clock models for continuous data, discrete data and molecular sequences in Tracer (\autoref{fig:bm_res6} and \autoref{fig:bm_res7})
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.700000\textwidth]{figures/results/EST_clock_rate.png}
@@ -516,12 +594,12 @@ minutes.
     \label{fig:bm_res7}
 \end{figure}
 
-\item Make the summary tree using TreeAnnotator (\autoref{fig:bm_res8})
+\item Construct the summary tree using TreeAnnotator (\autoref{fig:bm_res8})
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.700000\textwidth]{figures/results/EST_tree_height.png}
-    \caption{Summarised MCC trees estimated by combined data sets.}
-    \label{fig:bm_res8}
+    \caption{Summarised MCC trees estimated from the combined data sets.}
+     \label{fig:bm_res8}
 \end{figure}
 \end{itemize}
 
@@ -530,11 +608,13 @@ minutes.
 
 One of the errors message that can occur regularly is the following:
 \emph{Infinity likelihood}
+% Not necessarily an error, could just be a very unlikely state, or more likely numerical underflow
 
 \emph{Negative branch length}
+% If this is in the MCC tree, this is not an error, just an unfortunate side effect of summarising a set of posterior trees into one tree. 
 
 \emph{Unequal likelihoods}
-
+% This seems serious and seems like a problem with the implementation of the BEAST2 package
 \clearpage
 %%%%%%%%%%%%%%%%%%%%%%%
 % Tutorial disclaimer %
