@@ -166,7 +166,7 @@ phylogenetic trees. This tutorial is written for BEAST v2.7.7 \citep{bouckaert20
 
 \subsubsection*{BEAUti2 - Bayesian Evolutionary Analysis Utility}
 
-BEAUti2 is the successor of BEAUti, a graphical user interface tool that makes it easy to generate BEAST2 XML configuration files (these files are necessary to specify and run MCMC analyses).
+BEAUti2 is a graphical user interface tool that makes it easy to generate BEAST2 XML configuration files (these files are necessary to specify and run MCMC analyses).
 It is provided as a part of the BEAST2 package so you do not need to install it separately.
 Both BEAST2 and BEAUti2 are written in Java, meaning that these programs can not only be integrated at their codebase level, but that they are also cross-platform: the exact same code runs on all platforms.
 Although the screenshots used in this tutorial have been taken on a Mac OS X computer, both BEAST2 and BEAUti2 will have the same layout and functionality under other operating systems like Windows and Linux.
@@ -225,7 +225,7 @@ Open BEAUti2, go to \emph{File \textgreater{}\textgreater{} Manage Packages}, an
 \end{figure}
 
 This tutorial will also make use of a few other packages;
-these are \texttt{sampled-ancestors} and \texttt{morph-models}.
+these are \texttt{SA} (implementing sampled ancestor trees) and \texttt{MM} (implementing models of morphological character evolution).
 The first implements speciation and fossilization models (for evaluating the probability of phylogenies themselves), and the second implements models for the evolution of discrete morphological characters.
 %These packages have a dedicated tutorial (here \textcolor{red}{[https://taming-the-beast.org/tutorials/Total-Evidence-Tutorial/]}) and will not be discussed further in the present exercise.
 The SA and MM packages have two dedicated tutorials on the Taming the BEAST website (\href{https://taming-the-beast.org/tutorials/FBD-tutorial/}{Divergence Time Estimation tutorial} and \href{https://taming-the-beast.org/tutorials/Total-Evidence-Tutorial/}{Total Evidence tutorial}) and will not be discussed further in the present exercise.
@@ -258,7 +258,7 @@ The molecular sequences of 12 mitochondrial genes for 14 species of interest wer
 The following two sections will walk you through the required steps for setting up a couple of different analyses.
 The first shall carry out Bayesian inference of divergence times using continuous morphology only; the main player here is the Brownian model implemented in the \texttt{contraband} package.
 In the second analysis we will set up an integrative model with components for each type of data (described above) -- this will be a full-blown total-evidence dating analysis with all the data we have.
-Like in other tutorials, we will use BEAUti2 as a tool for specifying BEAST2 .XML files for running our analyses.
+Like in other tutorials, we will use BEAUti2 as a tool for specifying BEAST2 XML files for running our analyses.
 
 %\subsection{Phylogenetic inference with Brownian motion}
 %We start by opening BEAUti2 and loading the continuous morphology data available for our carnivoran species.
@@ -289,7 +289,7 @@ The continuous characters  can be found in the \texttt{data} folder named \textt
 %Clicking ``Ok'' should now populate the table with the fossil ages extracted from the species names.
 
 \subsubsection{Setting the fossil ages (Tip Dates)}\label{parse-fosill-age}
-Since the data set contains fossil species, we will need to open the "Tip Dates" panel and then select the "Use tip dates" checkbox to specify the fossil ages. This can be done in multiple ways. In our case, we can obtain the date information from the species names.  We can tell BEAUti  to use these by clicking the \emph{Auto-configure} button. The fossil ages appear following the second underscore "\_" in the species name. To extract these times, select "use everything", then select  "after last"  from the drop-down box to the right,  and input "\_" (without the quotes) in the text box immediately to the right, as shown in the figure below \autoref{fig:example2}. Clicking "OK" should now populate the table with the fossil ages extracted from the species names.
+Since the data set contains fossil species, we will need to open the "Tip Dates" panel and then select the "Use tip dates" checkbox to specify the fossil ages. This can be done in multiple ways. In our case, we can obtain the date information from the species names.  We can tell BEAUti  to use these by clicking the \emph{Auto-configure} button. The fossil ages appear following the second underscore "\_" in the species name. To extract these times, select "use everything", then select  "after last"  from the drop-down box to the right,  and input "\_" (without the quotes) in the text box immediately to the right, as shown in the figure below \autoref{fig:example2}. Clicking "OK" should now populate the table with the fossil ages extracted from the species names.  
 
 \begin{figure}[!htbp]
     \centering
@@ -298,6 +298,7 @@ Since the data set contains fossil species, we will need to open the "Tip Dates"
     \label{fig:example2}
 \end{figure}
 
+Next, make sure that the dropdown box indicates that dates are specified as "Before the present". 
 In the populated table, the two columns \textbf{Date}  and \textbf{Height}  should now have values between 0.0 and 35.55 in million years (\autoref{fig:example3}).
 
 \begin{figure}[!htbp]
@@ -315,7 +316,7 @@ Namely:\begin{enumerate}\item the character values at the root of the tree, $\bo
 
 We want to estimate all these parameters (so check all the ``estimate'' boxes), but for simplicity, we will assume that all characters are evolving at the same rate.
 Therefore, we want to check the ``One Rate Only'' box.
-Parameter values at the start of the MCMC chain can be specified in the text boxes next to their corresponding parameters names; these should not matter for analysis convergence, and we will just use arbitrary, round values (Fig. \ref{fig:example4}).
+Parameter values at the start of the MCMC chain can be specified in the text boxes next to their corresponding parameter names; these should not matter for analysis convergence, and we will just use arbitrary, round values (\autoref{fig:example4}).
 
 
 
@@ -329,9 +330,10 @@ Parameter values at the start of the MCMC chain can be specified in the text box
 
 \subsubsection{Setting the Clock model}\label{bm-clock-model}
 
-The morphological clock model we will use in this analysis is the well known uncorrelated log-normal clock \cite{drummond06}, under which each branch of the species tree is assumed to have its own relative evolutionary rate, with rates being identically and independently distributed.
+The morphological clock model we will use in this analysis is the well known uncorrelated log-normal clock \citep{drummond06}, under which each branch of the species tree is assumed to have its own relative evolutionary rate, with rates being identically and independently distributed.
 
-%\st{We assume the relative branch-specific rates are independently distributed and follow a LogNormal distribution with a fixed mean of 1. Therefore, we specify a relaxed clock model by selecting "Optimised Relaxed Clock" in the drop-down menu, where the mean clock rate represents the global morphological clock rate that will be estimated by default. The detailed description of the model can be found in} % \cite{douglas2021}.
+%We assume the relative branch-specific rates are independently distributed and follow a LogNormal distribution with a fixed mean of 1. 
+Therefore, we specify a relaxed clock model by selecting "Optimised Relaxed Clock" in the drop-down menu, where the mean clock rate represents the global morphological clock rate that will be estimated by default. The detailed description of the model can be found in \cite{douglas2021}.
 
 \begin{figure}[!htbp]
     \centering
@@ -382,7 +384,7 @@ Follow the steps below:
 \subsubsection{Analysing the log file using Tracer}
 
 First, we can open the \texttt{*.log} file in tracer to check if the
-MCMC has converged. The ESS value should be above 200 for almost all
+MCMC has converged. An example output file is provided in the "precooked\_runs" folder (\texttt{BM.log}). The ESS value should be above 200 for almost all
 parameters and especially for the posterior estimates (\autoref{fig:bm_res1}). This is clearly not the case here and this analysis should be run for much longer to reach convergence. 
 \begin{figure}[!htbp]
     \centering
@@ -421,7 +423,7 @@ Next, examine the posterior estimates for the following parameters:
 	\begin{figure}[!htbp]
 	    \centering
 	    \includegraphics[width=0.700000\textwidth]{figures/results/BM_clock_sigma.png}
-	    \caption{Comparing the inferrred migration rates.}
+	    \caption{Comparing the inferrred morphological clock.}
 	    \label{fig:bm_res5}
 	\end{figure}
 \end{itemize}
@@ -569,15 +571,15 @@ samples overall. Next, we have to save the \lstinline!*.xml! file under
 
 \subsection{Running the Analysis using BEAST2}\label{run-the-analysis-using-beast2}
 %
-Run the \lstinline!*.xml! using BEAST2 or use finished runs from the
-\emph{precooked-runs} folder. The analysis should take about 6 to 7
+Run the \texttt{*.xml} using BEAST2 or use finished runs from the
+\emph{precooked\_runs} folder. The analysis should take about 6 to 7
 minutes.
 %
 
 \subsection{Analysing the results}
 
 For this section either use the output files from your own analysis or use finished runs from the
-\emph{precooked-runs} folder. 
+\emph{precooked\_runs} folder. 
 
 \begin{itemize}
 \item Examine the posterior estimates for the inferred clock models for continuous data, discrete data and molecular sequences in Tracer (\autoref{fig:bm_res6} and \autoref{fig:bm_res7})
